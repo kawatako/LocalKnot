@@ -104,16 +104,45 @@ Fly.io: インフラ (PaaS) Db:PostgreSQL
 Rails: フロントエンド & バックエンド (Ruby on Rails)
 
 ◇ MVPリリース関連
+ユーザー登録・認証機能 Devise gemを利用する。
+メール送信には、Action Mailer を利用する。Fly.ioではSendGridなどのメール配信サービスとの連携が推奨されているので、必要に応じてSendGrid用のアダプター（例：sendgrid-ruby）を利用する。 メール送信を非同期で行うために、Sidekiq などのバックグラウンドジョブ処理ライブラリを利用する。 パスワードは安全にハッシュ化して保存する（Deviseが自動で対応）。
+使用モデル：Userモデル(user_id、mail、password、knotname)
+使用gem・技術:devise、image_processing (MiniMagickの依存gem)、sidekiq、必要に応じて sendgrid-ruby 等、uppy、dropzone.js
 
-ユーザー登録・認証機能 Devise gemを利用する。 メール送信には、Action Mailer を利用する。Fly.ioではSendGridなどのメール配信サービスとの連携が推奨されているので、必要に応じてSendGrid用のアダプター（例：sendgrid-ruby）を利用する。 メール送信を非同期で行うために、Sidekiq などのバックグラウンドジョブ処理ライブラリを利用する。 パスワードは安全にハッシュ化して保存する（Deviseが自動で対応）。 ユーザーモデルには、メールアドレス、パスワード、ニックネーム、プロフィール画像、自己紹介文のカラムを追加する。 プロフィール画像は、Active Storageを用いてアップロードと管理を行う。必要であれば、ImageMagick（またはそのラッパーであるMiniMagick）で画像のリサイズやフォーマット変換を行う。 JavaScriptライブラリとActive Storageを組み合わせることで、プロフィール画像アップロードの非同期化を検討する。(今回は掲示板機能に限定するため優先度低) 使用gem・技術:devise、image_processing (MiniMagickの依存gem)、sidekiq、必要に応じて sendgrid-ruby 等、uppy、dropzone.js
+プロフィール機能 (事業者側) プロフィールモデルに、自己紹介などのカラムを追加する。
+プロフィール編集画面は、通常のRailsのフォーム（form_withなど）で実装する。 
+プロフィール画像は、Active Storageを用いてアップロードと管理を行う。必要であれば、ImageMagick（またはそのラッパーであるMiniMagick）で画像のリサイズやフォーマット変換を行う。 JavaScriptライブラリとActive Storageを組み合わせることで、プロフィール画像アップロードの非同期化を検討する。(今回は掲示板機能に限定するため優先度低)
+SNS連携は、ユーザーモデルに各SNSのURLを保存するカラムを追加し、プロフィールページにリンクを表示する。 SNSへのリンクを保存する場所として、social-links gem等の利用を検討するが、Instagram が Web からの直接共有を公式にサポートしていないため使用しない可能性もある。
+使用モデル：Profileモデル(user_id、profile_picture、sex、age、self_int,sns_link)
+使用gem・技術:必要に応じて social-links
 
-プロフィール機能 (事業者側) ユーザーモデルに、提供サービス、得意分野、資格などのカラムを追加する。 プロフィール編集画面は、通常のRailsのフォーム（form_withなど）で実装する。 ポートフォリオ・実績表示は、関連するモデル（掲示板回答、ブログ、いいね、ベストアンサー）からデータを取得し、has_many、belongs_toなどの関連付けを利用して表示する。 SNS連携は、ユーザーモデルに各SNSのURLを保存するカラムを追加し、プロフィールページにリンクを表示する。 SNSへのリンクを保存する場所として、social-links gem等の利用を検討するが、Instagram が Web からの直接共有を公式にサポートしていないため使用しない可能性もある。 使用gem・技術:必要に応じて social-links
+ブログ機能 
+タイトル、本文、カテゴリ、スポット、ユーザーID（user_id）などのカラムを追加する。 
+ブログ記事の作成・編集画面は、通常のRailsのフォーム（form_withなど）で実装する。 カテゴリ機能は、カテゴリ用のモデル（例：Category）を作成し、Postモデルとhas_and_belongs_to_manyまたはhas_many :throughで関連付ける。 
+画像投稿機能は、Active Storageを利用し、複数の画像をアップロードできるようにする。
+ImageMagickで画像のリサイズや最適化を行う。 
+いいね機能は、いいね用のモデル（例：Like）を作成し、blogモデルおよびUserモデルとbelongs_toで関連付ける。(いいねのアクション自体は、JavaScriptで動的に表示を切り替える形にする) 
+コメント機能は、コメント用のモデル（例：Comment）を作成し、blogモデルおよびUserモデルとbelongs_toで関連付ける。(コメントの投稿自体は、JavaScriptで動的に表示を切り替える形にする)画像の遅延読み込みは必要に応じてlozad.jsなどのライブラリを使い、実装する。 キーワード検索機能は、ransack や pg_search gemを利用するか、PostgreSQLの全文検索機能を利用して実装する。 
+使用モデル：Blogモデル(title、body、category、area、user_id)、BlogLikeモデル()、BlogCommentモデル()
+使用gem・技術:image_processing、ransack または pg_search、acts-as-taggable-on、lozad.js
 
-ブログ機能 ブログ記事用のモデル（例：Post）を作成する。タイトル、本文、カテゴリ、スポット、ユーザーID（user_id）などのカラムを追加する。 ブログ記事の作成・編集画面は、通常のRailsのフォーム（form_withなど）で実装する。 カテゴリ機能は、カテゴリ用のモデル（例：Category）を作成し、Postモデルとhas_and_belongs_to_manyまたはhas_many :throughで関連付ける。 画像投稿機能は、Active Storageを利用し、複数の画像をアップロードできるようにする。ImageMagickで画像のリサイズや最適化を行う。 いいね機能は、いいね用のモデル（例：Like）を作成し、PostモデルおよびUserモデルとbelongs_toで関連付ける。(いいねのアクション自体は、JavaScriptで動的に表示を切り替える形にする) コメント機能は、コメント用のモデル（例：Comment）を作成し、PostモデルおよびUserモデルとbelongs_toで関連付ける。(コメントの投稿自体は、JavaScriptで動的に表示を切り替える形にする)画像の遅延読み込みは必要に応じてlozad.jsなどのライブラリを使い、実装する。 キーワード検索機能は、ransack や pg_search gemを利用するか、PostgreSQLの全文検索機能を利用して実装する。 タグ機能は、acts-as-taggable-onを使い、タグ用のモデル（例: Tag）を作成し、Postモデルとhas_and_belongs_to_manyまたはhas_many :throughで関連付ける。 使用gem・技術:image_processing、ransack または pg_search、acts-as-taggable-on、lozad.js
+掲示板機能 
+質問用のモデル（例：Question）を作成する。本文、ユーザーID（user_id）などのカラムを追加する。
+回答用のモデル（例：Answer）を作成する。本文、質問ID（question_id）、ユーザーID（user_id）などのカラムを追加する。 質問投稿・回答投稿画面は、通常のRailsのフォーム（form_withなど）で実装する。
+質問者は自分の質問への回答からベストアンサーを選択できる。 Ajax化: 
+いいね機能: いいねボタンにremote: trueを追加し、Ajaxでいいねのカウントを更新する。js.erbファイルでいいねボタンの表示（いいね済み・未いいね）といいね数を更新する。 
+コメント投稿: コメント投稿フォームにremote: trueを追加し、Ajaxでコメントを投稿する。js.erbファイルで投稿したコメントを動的に表示する。 
+回答投稿: 回答投稿フォームにremote: trueを追加し、Ajaxで回答を投稿する。js.erbファイルで投稿した回答を動的に表示する。 
+コメント機能は、コメント用のモデル（例：Comment）を作成し、Questionモデル、Answerモデル、およびUserモデルとbelongs_toで関連付ける。 
+いいね機能は、いいね用のモデル（例：Like）を作成し、Questionモデル、Answerモデル、およびUserモデルとbelongs_toで関連付ける。 
+検索機能は、ransack を利用し、ostgreSQLの全文検索機能を利用して実装する。 
+使用モデル：Questionモデル()、Answerモデル()、QusetionLikeモデル()
+使用gem・技術:ransack
 
-掲示板機能 質問用のモデル（例：Question）を作成する。タイトル、本文、旅行先、日程、予算、興味、ユーザーID（user_id）などのカラムを追加する。 回答用のモデル（例：Answer）を作成する。本文、質問ID（question_id）、ユーザーID（user_id）などのカラムを追加する。 質問投稿・回答投稿画面は、通常のRailsのフォーム（form_withなど）で実装する。 ベスト回答機能は、Answerモデルに、ベストアンサーかどうかのフラグ（例：is_best_answer）を持たせる。質問者は自分の質問への回答からベストアンサーを選択できる。 Ajax化: いいね機能: いいねボタンにremote: trueを追加し、Ajaxでいいねのカウントを更新する。js.erbファイルでいいねボタンの表示（いいね済み・未いいね）といいね数を更新する。 コメント投稿: コメント投稿フォームにremote: trueを追加し、Ajaxでコメントを投稿する。js.erbファイルで投稿したコメントを動的に表示する。 回答投稿: 回答投稿フォームにremote: trueを追加し、Ajaxで回答を投稿する。js.erbファイルで投稿した回答を動的に表示する。 ベストアンサー選択: ベストアンサー選択ボタン/リンクにremote: trueを追加し、Ajaxでベストアンサーを更新する。js.erbファイルでベストアンサー表示を更新する。 コメント機能は、コメント用のモデル（例：Comment）を作成し、Questionモデル、Answerモデル、およびUserモデルとbelongs_toで関連付ける。 いいね機能は、いいね用のモデル（例：Like）を作成し、Questionモデル、Answerモデル、およびUserモデルとbelongs_toで関連付ける。 検索機能は、ransack を利用し、ostgreSQLの全文検索機能を利用して実装する。 タグ機能は、ブログ機能と同様にacts-as-taggable-onを利用する。 使用gem・技術:ransack、acts-as-taggable-on
-
-通知機能 通知用のモデル（例：Notification）を作成する。通知タイプ、通知メッセージ、既読フラグ、ユーザーID（user_id）、関連するモデルの情報（例：質問ID、回答ID）などのカラムを追加する。Sidekiq などのバックグラウンドジョブ処理ライブラリを用いて、通知の作成を非同期で実行する。掲示板で回答があった場合に、質問者に通知を作成する。 通知の表示は、ページリロードで対応する。(リアルタイム通知は、必要に応じてAction Cableの利用を検討します。今回は、Ajax通信掲示板機能に限定のため、優先度低) 使用gem・技術:sidekiq
+通知機能 
+Sidekiq などのバックグラウンドジョブ処理ライブラリを用いて、通知の作成を非同期で実行する。掲示板で回答があった場合に、質問者にメールで通知を作成する。 
+使用モデル(Notificationモデル())
+Action Cableの利用を検討します。今回は、Ajax通信掲示板機能に限定のため、優先度低) 使用gem・技術:sidekiq
 
 ◇ 本リリース関連
 
