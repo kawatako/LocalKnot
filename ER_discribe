@@ -1,7 +1,6 @@
 各テーブルの説明
 
 1. User (ユーザー)
-
 役割: アプリケーションに登録するユーザーの基本情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): ユーザーの一意の識別子。
@@ -11,7 +10,6 @@ encrypted_password (varchar): 暗号化されたパスワード（Deviseによ�
 reset_password_token (varchar): パスワードリセット用のトークン（Deviseが使用）。
 reset_password_sent_at (datetime): パスワードリセットメール送信日時（Deviseが使用）。
 remember_created_at (datetime): ログイン状態の保持（Remember Me機能）に使用される日時（Deviseが使用）。
-nickname (varchar): ユーザーのニックネーム。
 notification_enabled (boolean): 通知の受信可否設定（デフォルトは true で受信する）。
 created_at (datetime): レコード作成日時。
 updated_at (datetime): レコード更新日時。
@@ -24,8 +22,8 @@ BlogLike と1対多 (has_many :blog_likes, dependent: :destroy)
 AnswerLike と1対多 (has_many :answer_likes, dependent: :destroy)
 BlogComment と1対多 (has_many :blog_comments, dependent: :destroy)
 Notification と1対多 (has_many :notifications, foreign_key: :recipient_id, dependent: :destroy および has_many :sent_notifications, class_name: "Notification", foreign_key: :actor_id, dependent: :destroy)
-2. Profile (プロフィール)
 
+2. Profile (プロフィール)
 役割: ユーザーのプロフィール情報を格納するテーブルです。User テーブルと1対1で関連付けられます。
 カラム:
 id (integer, 主キー): プロフィールの一意の識別子。
@@ -40,8 +38,8 @@ created_at (datetime): レコード作成日時。
 updated_at (datetime): レコード更新日時。
 関連:
 User と1対1 (belongs_to :user)
-3. Blog (ブログ)
 
+3. Blog (ブログ)
 役割: ユーザーが投稿するブログ記事の情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): ブログ記事の一意の識別子。
@@ -57,8 +55,8 @@ Area と多対多 (has_many :localizations, as: :localizable, dependent: :destro
 BlogLike と1対多 (has_many :blog_likes, dependent: :destroy)
 BlogComment と1対多 (has_many :blog_comments, dependent: :destroy)
 ActionText::RichText と1対1 (has_rich_text :body)
-4. Question (質問)
 
+4. Question (質問)
 役割: ユーザーが投稿する質問の情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): 質問の一意の識別子。
@@ -72,8 +70,8 @@ User と1対多 (belongs_to :user)
 Category と多対多 (has_many :categorizables, as: :categorizable, dependent: :destroy, has_many :categories, through: :categorizables)
 Area と多対多 (has_many :localizations, as: :localizable, dependent: :destroy, has_many :areas, through: :localizations)
 Answer と1対多 (has_many :answers, dependent: :destroy)
-5. Answer (回答)
 
+5. Answer (回答)
 役割: ユーザーが質問に対して投稿する回答の情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): 回答の一意の識別子。
@@ -86,8 +84,8 @@ updated_at (datetime): レコード更新日時。
 User と1対多 (belongs_to :user)
 Question と1対多 (belongs_to :question)
 AnswerLike と1対多 (has_many :answer_likes, dependent: :destroy)
-6. Notification (通知)
 
+6. Notification (通知)
 役割: ユーザーへの通知情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): 通知の一意の識別子。
@@ -102,24 +100,24 @@ updated_at (datetime): レコード更新日時。
 関連:
 User に対して、recipient_id と actor_id を介して2つの関連 (belongs_to :recipient, class_name: "User", belongs_to :actor, class_name: "User")
 notifiable_type と notifiable_id で指定された任意のモデルと関連付けられる（ポリモーフィック関連）
-7. Category (カテゴリー)
 
+7. Category (カテゴリー)
 役割: ブログ記事や質問を分類するためのカテゴリー情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): カテゴリーの一意の識別子。
 name (varchar): カテゴリー名（例：「グルメ」、「観光」、「ホテル」など）。
 関連:
 Blog, Question と多対多 (has_many :categorizables, dependent: :destroy, has_many :blogs, through: :categorizables, source: :categorizable, source_type: 'Blog', has_many :questions, through: :categorizables, source: :categorizable, source_type: 'Question' 中間テーブルは Categorizable, ポリモーフィック関連を使用)
-8. Area (エリア)
 
+8. Area (エリア)
 役割: ブログ記事や質問に関連するエリア情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): エリアの一意の識別子。
 name (varchar): エリア名（例：「東京都」、「大阪府」、「京都府」など）。
 関連:
 Blog, Question と多対多 (has_many :localizations, dependent: :destroy, has_many :blogs, through: :localizations, source: :localizable, source_type: 'Blog', has_many :questions, through: :localizations, source: :localizable, source_type: 'Question' 中間テーブルは Localization, ポリモーフィック関連を使用)
-9. Categorizable (カテゴリー中間テーブル)
 
+9. Categorizable (カテゴリー中間テーブル)
 役割: Category と Blog または Question の多対多の関連を表現するための中間テーブルです。ポリモーフィック関連を用いています。
 カラム:
 id (integer, 主キー): 中間テーブルのレコードの一意の識別子。
@@ -129,8 +127,8 @@ category_id (integer, 外部キー): 関連するカテゴリーの id。
 関連:
 Category と1対多 (belongs_to :category)
 Blog または Question と1対多 (belongs_to :categorizable, polymorphic: true)
-10. Localization (エリア中間テーブル)
 
+10. Localization (エリア中間テーブル)
 役割: Area と Blog または Question の多対多の関連を表現するための中間テーブルです。ポリモーフィック関連を用いています。
 カラム:
 id (integer, 主キー): 中間テーブルのレコードの一意の識別子。
@@ -140,8 +138,8 @@ area_id (integer, 外部キー): 関連するエリアの id。
 関連:
 Area と1対多 (belongs_to :area)
 Blog または Question と1対多 (belongs_to :localizable, polymorphic: true)
-11. BlogLike (ブログいいね)
 
+11. BlogLike (ブログいいね)
 役割: ユーザーがブログ記事に対して行った「いいね」の情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): いいねの一意の識別子。
@@ -152,8 +150,8 @@ updated_at (datetime): レコード更新日時。
 関連:
 User と1対多 (belongs_to :user)
 Blog と1対多 (belongs_to :blog)
-12. AnswerLike (回答いいね)
 
+12. AnswerLike (回答いいね)
 役割: ユーザーが回答に対して行った「いいね」の情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): いいねの一意の識別子。
@@ -164,8 +162,8 @@ updated_at (datetime): レコード更新日時。
 関連:
 User と1対多 (belongs_to :user)
 Answer と1対多 (belongs_to :answer)
-13. BlogComment (ブログコメント)
 
+13. BlogComment (ブログコメント)
 役割: ユーザーがブログ記事に対して投稿したコメントの情報を格納するテーブルです。
 カラム:
 id (integer, 主キー): コメントの一意の識別子。
@@ -179,21 +177,18 @@ User と1対多 (belongs_to :user)
 Blog と1対多 (belongs_to :blog)
 補足: Active Storage と Action Text 関連のテーブル
 
-以下のテーブルは、Active Storage と Action Text の機能を使うために必要なテーブルです。普段の開発で直接操作することは少ないですが、裏側で重要な役割を果たしています。
-
 14. active_storage_blobs (Active Storage ブロブテーブル)
-
 役割: Active Storage で管理されるファイルのメタデータを格納するテーブルです。
 関連: active_storage_attachments, active_storage_variant_records
-15. active_storage_attachments (Active Storage 添付ファイルテーブル)
 
+15. active_storage_attachments (Active Storage 添付ファイルテーブル)
 役割: Active Storage で管理されるファイルと、モデルの関連付けを格納する中間テーブルです。
 関連: active_storage_blobs, および関連付けられる任意のモデル
-16. active_storage_variant_records (Active Storage バリアントレコードテーブル)
 
+16. active_storage_variant_records (Active Storage バリアントレコードテーブル)
 役割: Active Storage で生成された画像のバリエーション情報を格納するテーブルです。
 関連: active_storage_blobs
-17. action_text_rich_texts (Action Text リッチテキストテーブル)
 
+17. action_text_rich_texts (Action Text リッチテキストテーブル)
 役割: Action Text で作成されたリッチテキストコンテンツを格納するテーブルです。
 関連: Blog (ポリモーフィック関連)
