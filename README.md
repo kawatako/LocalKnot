@@ -103,6 +103,7 @@ Docker: コンテナ型仮想環境
 Fly.io: インフラ (PaaS) Db:PostgreSQL 
 Rails: フロントエンド & バックエンド (Ruby on Rails)
 
+
 ◇ MVPリリース関連
 1. ユーザー登録・認証機能
 必要な機能:
