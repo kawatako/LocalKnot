@@ -118,52 +118,52 @@ foratravel:海外のサービスで、検索範囲は広い代わりにデザイ
 ## ◇ MVPリリース関連
 ### 1. ユーザー登録・認証機能
 #### 必要な機能
-*新規ユーザー登録 (メールアドレス、パスワード、ニックネーム)  
-*ログイン / ログアウト  
-*パスワードリセット  
-*メールアドレス確認  
+* 新規ユーザー登録 (メールアドレス、パスワード、ニックネーム)  
+* ログイン / ログアウト  
+* パスワードリセット  
+* メールアドレス確認  
 #### 作成モデル:
-*User (Devise で自動生成)
+* User (Devise で自動生成)
 #### 関連モデル:
-*Profile (1対1 で関連付け)
+* Profile (1対1 で関連付け)
 #### 使用 gem や技術
-*devise: 認証機能全般  
-*devise-i18n: Devise のメッセージを日本語化 (オプション)  
-*Action Mailer: メール送信  
-*SendGrid (または他のメール配信サービス): メール配信 (オプション)  
-*Sidekiq: メール送信の非同期化 (オプション)  
+* devise: 認証機能全般  
+* devise-i18n: Devise のメッセージを日本語化 (オプション)  
+* Action Mailer: メール送信  
+* SendGrid (または他のメール配信サービス): メール配信 (オプション)  
+* Sidekiq: メール送信の非同期化 (オプション)  
 
 ### 2. プロフィール機能
 #### 必要な機能:
-*プロフィール表示  
-*プロフィール編集 (自己紹介文、画像、SNS リンク)  
+* プロフィール表示  
+* プロフィール編集 (自己紹介文、画像、SNS リンク)  
 #### 作成モデル
-*Profile
+* Profile
 #### 関連モデル
-*User (1対1 で関連付け)
+* User (1対1 で関連付け)
 #### 使用 gem や技術  
-*Active Storage: プロフィール画像のアップロード  
-*ImageMagick (または MiniMagick): 画像のリサイズやフォーマット変換 (必要に応じて)  
+* Active Storage: プロフィール画像のアップロード  
+* ImageMagick (または MiniMagick): 画像のリサイズやフォーマット変換 (必要に応じて)  
 
 ### 3. 掲示板機能
 #### 必要な機能:
-*質問の投稿、編集、削除  
-*回答の投稿、編集、削除  
-*質問・回答へのコメント (今回は AnswerComment モデルで実装)  
-*回答へのいいね  
-*質問一覧、詳細表示  
-*キーワード、地域、カテゴリーなどでの検索  
+* 質問の投稿、編集、削除  
+* 回答の投稿、編集、削除  
+* 質問・回答へのコメント (今回は AnswerComment モデルで実装)  
+* 回答へのいいね  
+* 質問一覧、詳細表示  
+* キーワード、地域、カテゴリーなどでの検索  
 #### 作成モデル
-*Question  
-*Answer  
-*AnswerLike
+* Question  
+* Answer  
+* AnswerLike
 #### 関連モデル
-*User (Question, Answer は User に belongs_to で関連付け)  
-*Category (Question と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
-*Area (Question と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
+* User (Question, Answer は User に belongs_to で関連付け)  
+* Category (Question と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
+* Area (Question と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
 #### 使用 gem や技術
-*Ransack または pg_search: キーワード検索  
-*Kaminari または will_paginate: ページネーション  
+* Ransack または pg_search: キーワード検索  
+* Kaminari または will_paginate: ページネーション  
 
 ### 4.その他
 Category と Areaモデルは、BlogとQuestion の両方に関連付けられます。  
@@ -172,69 +172,69 @@ Category と Areaモデルは、BlogとQuestion の両方に関連付けられ�
 ## ◇ 本リリース関連
 ### 1. ブログ機能
 #### 必要な機能:
-*ブログ記事の作成、編集、削除  
-*ブログ記事の一覧表示、詳細表示  
-*カテゴリ、エリアでの絞り込み  
-*キーワード検索  
-*画像投稿 (複数枚、body 内に埋め込み)  
-*いいね機能  
-*コメント機能  
+* ブログ記事の作成、編集、削除  
+* ブログ記事の一覧表示、詳細表示  
+* カテゴリ、エリアでの絞り込み  
+* キーワード検索  
+* 画像投稿 (複数枚、body 内に埋め込み)  
+* いいね機能  
+* コメント機能  
 #### 作成モデル
-*Blog  
-*BlogLike  
-*BlogComment  
+* Blog  
+* BlogLike  
+* BlogComment  
 #### 関連モデル
-*User (Blog は User に belongs_to で関連付け)
-*Category (Blog と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
-*Area (Blog と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
-*ActiveStorage::Attachment (Blog は has_many_attached :images で関連付け)  
-*ActionText::RichText (Blog は has_rich_text :body で関連付け)  
+* User (Blog は User に belongs_to で関連付け)
+* Category (Blog と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
+* Area (Blog と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
+* ActiveStorage::Attachment (Blog は has_many_attached :images で関連付け)  
+* ActionText::RichText (Blog は has_rich_text :body で関連付け)  
 #### 使用 gem や技術
-*Active Storage: 画像のアップロード  
-*Action Text: リッチテキストエディタ (Trix)  
-*ImageMagick: 画像のリサイズや最適化  
-*Ransack または pg_search: キーワード検索  
-*Kaminari または will_paginate: ページネーション  
-*lozad.js: 画像の遅延読み込み (オプション)  
+* Active Storage: 画像のアップロード  
+* Action Text: リッチテキストエディタ (Trix)  
+* ImageMagick: 画像のリサイズや最適化  
+* Ransack または pg_search: キーワード検索  
+* Kaminari または will_paginate: ページネーション  
+* lozad.js: 画像の遅延読み込み (オプション)  
 
 ### 2. 通知機能
 #### 必要な機能
-*以下のイベント発生時にメールで通知:  
+* 以下のイベント発生時にメールで通知:  
 自分の質問への回答  
 自分の質問・回答へのいいね  
 自分のブログへのいいね  
 自分のブログへのコメント  
 #### 作成モデル
-*Notification  
+* Notification  
 #### 関連モデル
-*User (Notification は User に belongs_to で関連付け、recipient_id と actor_id を使用)  
-*Blog, Question, Answer (Notification は notifiable_id, notifiable_type でポリモーフィック関連)  
+* User (Notification は User に belongs_to で関連付け、recipient_id と actor_id を使用)  
+* Blog, Question, Answer (Notification は notifiable_id, notifiable_type でポリモーフィック関連)  
 #### 使用 gem や技術
-*Action Mailer: メール送信  
-*Sidekiq: メール送信の非同期化  
-*SendGrid (または他のメール配信サービス): メール配信 (必要に応じて)  
+* Action Mailer: メール送信  
+* Sidekiq: メール送信の非同期化  
+* SendGrid (または他のメール配信サービス): メール配信 (必要に応じて)  
 
 ### 3.ユーザー登録・認証機能
 #### 必要な機能
-*事業者登録 (銀行口座情報、身分証明書、電話番号認証)  
-*事業者アカウントと一般ユーザーアカウントの区別  
+* 事業者登録 (銀行口座情報、身分証明書、電話番号認証)  
+* 事業者アカウントと一般ユーザーアカウントの区別  
 #### 作成モデル  
   
 #### 関連モデル
   
 #### 使用 gem や技術
-*devise: 認証機能全般  
-*devise-i18n: Devise のメッセージを日本語化  
-*Action Mailer: メール送信  
-*SendGrid (または他のメール配信サービス): メール配信  
-*Sidekiq: メール送信の非同期化  
-*stripe: 支払い情報処理  
-*twilio-ruby: 電話番号認証 (SMS 送信)  
-*Active Storage: 身分証明書などのファイルアップロード  
+* devise: 認証機能全般  
+* devise-i18n: Devise のメッセージを日本語化  
+* Action Mailer: メール送信  
+* SendGrid (または他のメール配信サービス): メール配信  
+* Sidekiq: メール送信の非同期化  
+* stripe: 支払い情報処理  
+* twilio-ruby: 電話番号認証 (SMS 送信)  
+* Active Storage: 身分証明書などのファイルアップロード  
 
 ### 4.プロフィール機能
 #### 必要な機能
-*事業者用プロフィール編集 (銀行口座情報、身分証明書)  
+* 事業者用プロフィール編集 (銀行口座情報、身分証明書)  
 #### 作成モデル  
   
 #### 関連モデル
@@ -243,79 +243,79 @@ Category と Areaモデルは、BlogとQuestion の両方に関連付けられ�
   
 ### 5.旅行プラン作成機能
 #### 必要な機能
-*旅行プランの作成、編集、削除  
-*旅行プランの一覧表示、詳細表示  
-*エリア、カテゴリーでの絞り込み  
-*キーワード検索  
+* 旅行プランの作成、編集、削除  
+* 旅行プランの一覧表示、詳細表示  
+* エリア、カテゴリーでの絞り込み  
+* キーワード検索  
 #### 作成モデル
-*Plan  
+* Plan  
 #### 関連モデル
-*User (事業者に belongs_to で関連付け)  
-*Category (Plan と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
-*Area (Plan と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
+* User (事業者に belongs_to で関連付け)  
+* Category (Plan と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
+* Area (Plan と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
 #### 使用 gem や技術
-Ransack キーワード検索  
-Kaminari ページネーション  
+* Ransack キーワード検索  
+* Kaminari ページネーション  
 
 ### 5.旅行リクエスト作成機能 
 #### 必要な機能
-*旅行リクエストの作成、編集、削除  
-*旅行リクエストの一覧表示、詳細表示  
-*エリア、カテゴリーでの絞り込み  
-*キーワード検索  
+* 旅行リクエストの作成、編集、削除  
+* 旅行リクエストの一覧表示、詳細表示  
+* エリア、カテゴリーでの絞り込み  
+* キーワード検索  
 
 #### 作成モデル
-*Request
+* Request
 #### 関連モデル
-*User (利用者に belongs_to で関連付け)  
-*Category (Request と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
-*Area (Request と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
+* User (利用者に belongs_to で関連付け)  
+* Category (Request と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
+* Area (Request と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
 #### 使用 gem や技術
-Ransack キーワード検索  
-Kaminari ページネーション  
+* Ransack キーワード検索  
+* Kaminari ページネーション  
 
 ### 6.マッチング機能
 #### 必要な機能
-*ガイドへのリクエスト送信 (旅行者)  
-*ガイドからのプランへの応募 (ガイド)  
-*マッチング成立処理  
-*マッチング一覧表示  
-*マッチング後のメッセージ送受信  
-*ガイドへの評価  
+* ガイドへのリクエスト送信 (旅行者)  
+* ガイドからのプランへの応募 (ガイド)  
+* マッチング成立処理  
+* マッチング一覧表示  
+* マッチング後のメッセージ送受信  
+* ガイドへの評価  
 #### 作成モデル
-**Application  
-*Matching  
-*Message  
-*Review  
+* Application  
+* Matching  
+* Message  
+* Review  
 #### 関連モデル
-*User (旅行者・ガイドと Application, Matching, Message, Review を関連付け)  
-*Request (Application, Matching を関連付け)  
-*Plan (Application, Matching を関連付け)  
+* User (旅行者・ガイドと Application, Matching, Message, Review を関連付け)  
+* Request (Application, Matching を関連付け)  
+* Plan (Application, Matching を関連付け)  
 #### 使用 gem や技術
 検討
 
 ### 7.決済機能 
 #### 必要な機能
-*決済処理 (Stripe 使用)  
-*決済履歴表示  
-*キャンセル時の返金処理 (Stripe 使用)  
+* 決済処理 (Stripe 使用)  
+* 決済履歴表示  
+* キャンセル時の返金処理 (Stripe 使用)  
 #### 作成モデル
-*PaymentLog  
+* PaymentLog  
 #### 関連モデル
-*User (旅行者と関連付け)
-*Matching (決済対象のマッチングと関連付け)
+* User (旅行者と関連付け)
+* Matching (決済対象のマッチングと関連付け)
 #### 使用 gem や技術
-*stripe: 決済代行サービス  
-*sidekiq: 非同期処理  
+* stripe: 決済代行サービス  
+* sidekiq: 非同期処理  
 
 ### 8.多言語対応 
 #### 必要な機能
-*ユーザーの言語設定に応じた表示言語の切り替え  
-*文言の日本語と英語の対訳  
+* ユーザーの言語設定に応じた表示言語の切り替え  
+* 文言の日本語と英語の対訳  
 #### 作成モデル
 *
 #### 関連モデル
 *
 #### 使用 gem や技術
-i18n: Rails の国際化機能  
-*i18n-js: JavaScript での国際化対応 (オプション)  
+* i18n: Rails の国際化機能  
+* i18n-js: JavaScript での国際化対応 (オプション)  
