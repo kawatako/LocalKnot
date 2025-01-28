@@ -1,0 +1,85 @@
+# docker-compose ファイルのバージョンを指定
+version: "3.9"
+
+# サービスを定義
+services:
+  # db サービス (PostgreSQL データベース)
+  db:
+    # 使用する Docker イメージ
+    image: postgres
+    # コンテナが停止した場合に常に再起動する
+    restart: always
+    # 環境変数を設定
+    environment:
+      # タイムゾーンを Asia/Tokyo に設定
+      TZ: Asia/Tokyo
+      # POSTGRES_PASSWORD 環境変数を設定 (データベースのスーパーユーザーのパスワード)
+      POSTGRES_PASSWORD: password
+    # ボリュームをマウント
+    volumes:
+      # postgresql_data ボリュームをコンテナの /var/lib/postgresql ディレクトリにマウント (データベースの永続化)
+      - postgresql_data:/var/lib/postgresql
+    # ポートを公開
+    ports:
+      # ホストマシンの 5432 番ポートをコンテナの 5432 番ポートにマッピング
+      - 5432:5432
+    # ヘルスチェックの設定
+    healthcheck:
+      # ヘルスチェックのコマンド。pg_isready コマンドでデータベースが起動し、接続可能か確認
+      test: ["CMD-SHELL", "pg_isready -d myapp_development -U postgres"]
+      # ヘルスチェックの実行間隔
+      interval: 10s
+      # ヘルスチェックのタイムアウト時間
+      timeout: 5s
+      # ヘルスチェックの失敗時の再試行回数
+      retries: 5
+
+  # web サービス (Ruby on Rails アプリケーション)
+  web:
+    # イメージのビルド設定
+    build:
+      # ビルドコンテキスト (Dockerfile が存在するディレクトリ)
+      context: .
+      # 使用する Dockerfile の名前
+      dockerfile: Dockerfile.dev
+    # コンテナ起動時に実行するコマンド
+    # bundle install: 依存関係のインストール
+    # bundle exec rails db:prepare: データベースの作成とスキーマの読み込みまたはマイグレーション
+    # rm -f tmp/pids/server.pid: サーバーのプロセス ID ファイルを削除 (サーバーが正常に終了しなかった場合に残っている可能性があるため)
+    # ./bin/dev: 開発用のコマンドを実行 (Procfile.dev で定義されているコマンドが実行される)
+    command: bash -c "bundle install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && ./bin/dev"
+    # TTY を有効化 (コンテナ内で対話的な操作を可能にする)
+    tty: true
+    # 標準入力を開く (コンテナ内で対話的な操作を可能にする)
+    stdin_open: true
+    # ボリュームをマウント
+    volumes:
+      # ホストマシンのカレントディレクトリをコンテナの /myapp ディレクトリにマウント (ソースコードの変更を即座に反映)
+      - .:/myapp
+      # bundle_data ボリュームをコンテナの /usr/local/bundle ディレクトリにマウント (gem のインストール先を永続化し、高速化)
+      - bundle_data:/usr/local/bundle:cached
+      # node_modules ボリュームをコンテナの /myapp/node_modules ディレクトリにマウント(node関連のパッケージを永続化し、高速化)
+      - node_modules:/myapp/node_modules
+    # 環境変数を設定
+    environment:
+      # タイムゾーンを Asia/Tokyo に設定
+      TZ: Asia/Tokyo
+    # ポートを公開
+    ports:
+      # ホストマシンの 3000 番ポートをコンテナの 3000 番ポートにマッピング
+      - "3000:3000"
+    # 依存関係を設定
+    depends_on:
+      # db サービスに依存
+      db:
+        # db サービスのヘルスチェックが成功したら web サービスを起動する
+        condition: service_healthy
+
+# ボリュームを定義
+volumes:
+  # bundle_data ボリューム (gem のインストール先)
+  bundle_data:
+  # postgresql_data ボリューム (PostgreSQL のデータディレクトリ)
+  postgresql_data:
+  # node_modules ボリューム (node関連のパッケージ)
+  node_modules:
