@@ -29,18 +29,31 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2.3
+        ruby-version: 3.1.2
         bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y --no-install-recommends build-essential curl git libpq-dev
+        curl -sSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/yarn.gpg > /dev/null
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends nodejs yarn
+        yarn install
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
 
     - name: Initialize database
       run: |
         bundle exec rake db:create
-        bundle exec rake db:schema:load
+        bundle exec rake db:migrate
+        bundle exec rails generate rspec:install
         bundle exec rake db:seed
 
-    # このステップを追加
     - name: Run Brakeman
-      run: bundle exec brakeman -o tmp/brakeman.html
+      run: bundle exec brakeman --no-pager
 
     - name: Run tests
       run: bundle exec rspec
