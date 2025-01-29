@@ -49,9 +49,8 @@ gem "kaminari"
 # 検索機能
 gem "ransack"
 
-# 開発環境でメールをプレビュー
-gem "letter_opener", "~> 1.9.0"
-gem "letter_opener_web", "~> 2.0"
+# 起動高速化
+gem "bootsnap", require: false
 
 # 開発・テスト環境用
 group :development, :test do
@@ -63,9 +62,6 @@ group :development, :test do
   gem "rubocop-faker", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rspec", require: false
-
-  # 起動高速化
-  gem "bootsnap", require: false
 
   # RSpec テストフレームワーク
   gem "rspec-rails"
@@ -93,5 +89,9 @@ group :development do
   gem "spring-watcher-listen", "~> 2.0.0"
   # Rails アプリケーションのセキュリティ脆弱性を静的に解析するツ
   gem "brakeman"
+
+  # 開発環境でメールをプレビュー
+  gem "letter_opener", "~> 1.9.0"
+  gem "letter_opener_web", "~> 2.0"
 end
 gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]
