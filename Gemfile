@@ -91,5 +91,7 @@ group :development do
   gem "spring"
   # spring使用時、listen gemを使ってファイルの変更を検知する
   gem "spring-watcher-listen", "~> 2.0.0"
+  # Rails アプリケーションのセキュリティ脆弱性を静的に解析するツ
+  gem "brakeman"
 end
 gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]

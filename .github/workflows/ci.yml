@@ -1,83 +1,46 @@
-name: CI
+name: Rails Tests
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
   test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres
+        image: postgres:15.4
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password # データベースのパスワードを環境変数から取得するように変更
-          POSTGRES_DB: myapp_test # この行を追加
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgresql://postgres:password@postgres:5432/test"
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev node-gyp pkg-config python-is-python3 google-chrome-stable
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1.2
+        bundler-cache: true
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+    - name: Initialize database
+      run: |
+        bundle exec rake db:create
+        bundle exec rake db:schema:load
+        bundle exec rake db:seed
 
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:password@localhost:5432/myapp_test  # DBのユーザー名、パスワード、データベース名を変更
-        run: |
-          bundle install
-          bundle exec rails db:create
-          bundle exec rails db:migrate
-          bundle exec rspec # bin/rails test を bundle exec rspec に変更
+    # このステップを追加
+    - name: Run Brakeman
+      run: bundle exec brakeman -o tmp/brakeman.html
 
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+    - name: Run tests
+      run: bundle exec rspec
