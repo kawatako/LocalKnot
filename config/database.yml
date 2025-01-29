@@ -20,7 +20,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-  url: <%= ENV[postgresql://kawata_com_db_user:AmmXFtrLmjLc6Tx8SBwz7pAIM8cIIQlU@dpg-cuc3pjrqf0us73c5e0lg-a/kawata_com_db] %>
+    url: <%= ENV["DATABASE_URL"] %>  # 環境変数名を指定するように修正
 
   cache:
     <<: *primary_production

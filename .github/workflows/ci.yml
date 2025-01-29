@@ -45,16 +45,11 @@ jobs:
         image: postgres
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: password # データベースのパスワードを環境変数から取得するように変更
+          POSTGRES_DB: myapp_test # この行を追加
         ports:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Install packages
@@ -72,9 +67,12 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+          DATABASE_URL: postgres://postgres:password@localhost:5432/myapp_test  # DBのユーザー名、パスワード、データベース名を変更
+        run: |
+          bundle install
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+          bundle exec rspec # bin/rails test を bundle exec rspec に変更
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
