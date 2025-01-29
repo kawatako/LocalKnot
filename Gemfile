@@ -1,72 +1,95 @@
 source "https://rubygems.org"
+git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
+# Ruby のバージョンを指定
+ruby "3.2.3"
+
+# Rails フレームワーク本体
 gem "rails", "~> 7.1.3"
-# Ruby on Rails フレームワーク本体
-gem "propshaft"
-# Rails のモダンなアセットパイプライン (アセットの管理と配信)
+
+# PostgreSQL 用データベースアダプタ
 gem "pg", "~> 1.1"
-# PostgreSQL データベース用のアダプタ
-gem "puma", ">= 5.0"
-# Puma Web サーバー (アプリケーションサーバー)
+
+# Puma Web サーバー
+gem "puma", "~> 6.0"
+
+# JavaScript のビルドを管理
 gem "jsbundling-rails"
-# JavaScript のバンドルとトランスパイル
+
+# ページ遷移を高速化する Hotwire の一部
 gem "turbo-rails"
-# Hotwire の Turbo (高速なページ遷移を実現)
+
+# 軽量な JavaScript フレームワークである Hotwire の一部
 gem "stimulus-rails"
-# Hotwire の Stimulus (JavaScript フレームワーク)
+
+# CSS のビルドを管理
 gem "cssbundling-rails"
-# CSS のバンドルと処理
+
+# JSON API を構築するための DSL
 gem "jbuilder"
-# JSON API を簡単に構築するための gem
-gem "tzinfo-data", platforms: %i[windows jruby]
-# タイムゾーン情報 (Windows や JRuby で必要)
-gem "solid_cache"
-# データベースバックエンドのキャッシュストア (Rails.cache)処理結果をキャッシュして、アプリケーションを高速化
-gem "solid_queue"
-# データベースバックエンドのジョブキュー (Active Job)時間のかかる処理を非同期に実行して、ユーザー体験を向上させる
-gem "solid_cable"
-# データベースバックエンドの WebSocket 接続管理 (Action Cable)Action Cable のアダプターを PostgreSQL データベースで置き換える
-gem "bootsnap", require: false
-# アプリケーションの起動を高速化するための gem
-gem "kamal", require: false
-# Docker を使用したアプリケーションのデプロイを簡素化するツール
-gem "thruster", require: false
-# Puma に HTTP アセットのキャッシュ、圧縮、X-Sendfile アクセラレーションを追加
-gem "tailwindcss-rails", "~> 4.0.0.rc1", github: "rails/tailwindcss-rails", branch: "main"
-# Tailwind CSS を Rails で使用するための gem
 
+# Redis クライアント
+gem "redis", "~> 5.0"
+
+# Windows で必要となるタイムゾーン情報
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+
+# バックグラウンドジョブ処理
+gem "sidekiq", "~> 7.0"
+
+# ユーザー認証機能
+gem "devise"
+
+# Devise の国際化対応
+gem "devise-i18n"
+
+# ページネーション機能
+gem "kaminari"
+
+# 検索機能
+gem "ransack"
+
+# 開発環境でメールをプレビュー
+gem "letter_opener", "~> 1.9.0"
+gem "letter_opener_web", "~> 2.0"
+
+# 開発・テスト環境用
 group :development, :test do
-  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
-  # デバッガ (Ruby のデバッグを支援)
-  gem "brakeman", require: false
-  # セキュリティ脆弱性を検出する静的解析ツール
-  gem "rspec-rails", require: false
-  # RSpec テストフレームワーク
-  gem "pry-byebug"
-  # デバッグ用コンソール (Pry) と byebug の連携
-  gem "pry-doc"
-  # Pry で Ruby のドキュメントを参照できるようにする
-  gem "pry-rails"
-  # Rails コンソールで Pry を使用
-  gem "rubocop-faker"
-  # Faker gem に特化した RuboCop 拡張 (偽データの生成)
-  gem "rubocop-rails", require: false
-  # Rails に特化した RuboCop 拡張
-  gem "rubocop-rspec", require: false
-  # RSpec に特化した RuboCop 拡張
+  # デバッグ用ツール
+  gem "debug", platforms: %i[mri mingw x64_mingw]
+
+  # コード静的解析ツール
   gem "rubocop-capybara", require: false
+  gem "rubocop-faker", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
 
-  gem "rubocop-rspec_rails", require: false
-end
+  # 起動高速化
+  gem "bootsnap", require: false
 
-group :development do
-  gem "web-console"
-  # 例外発生時に Web ブラウザ上でコンソールを表示
-end
+  # RSpec テストフレームワーク
+  gem "rspec-rails"
 
-group :test do
+  # システムテスト用
   gem "capybara"
-  # 統合テストフレームワーク (ブラウザ操作の自動化)
   gem "selenium-webdriver"
-  # Selenium WebDriver (ブラウザの自動操作)
+  gem "webdrivers", "~> 5.0"
+
+  # テストデータ作成
+  gem "factory_bot_rails"
+
+  # テストデータクリーンアップ
+  gem "database_cleaner"
 end
+
+# 開発環境用
+group :development do
+  # 例外発生時のコンソール表示
+  gem "web-console"
+
+  # アプリケーション起動高速化 (jsbundling-rails, cssbundling-railsを使う場合、無効化することを推奨)
+  gem "spring"
+  # spring使用時、listen gemを使ってファイルの変更を検知する
+  gem "spring-watcher-listen", "~> 2.0.0"
+end
+gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]

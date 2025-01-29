@@ -2,6 +2,7 @@ require:
   - rubocop-rails
   - rubocop-capybara
   - rubocop-rspec_rails
+  - rubocop-rspec
 
 inherit_from:
   - config/rubocop/rubocop.yml
