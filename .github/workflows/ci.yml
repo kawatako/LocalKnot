@@ -17,7 +17,12 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+          --health-cmd pg_isready --health-interval 10s --health_timeout 5s --health_retries 5
+      # webサービスからpostgresサービスにアクセスできるように、depends_onを追加
+      web:
+        image: web:latest
+        depends_on:
+          - postgres
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgresql://postgres:password@postgres:5432/test"
@@ -44,6 +49,7 @@ jobs:
         yarn install
         sudo apt-get update
         sudo apt-get install -y postgresql-client
+        gem install brakeman
 
     - name: Initialize database
       run: |
@@ -51,9 +57,7 @@ jobs:
         bundle exec rake db:migrate
         bundle exec rails generate rspec:install
         bundle exec rake db:seed
-
     - name: Run Brakeman
       run: bundle exec brakeman --no-pager
-
     - name: Run tests
       run: bundle exec rspec
