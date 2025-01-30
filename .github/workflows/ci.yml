@@ -19,11 +19,6 @@ jobs:
           - 5432:5432
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      # webサービスからpostgresサービスにアクセスできるように、depends_onを追加
-      web:
-        image: web:latest
-        depends_on:
-          - postgres
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgresql://postgres:password@localhost:5432/localknot_test" # 環境変数 `DATABASE_URL` を設定
@@ -50,9 +45,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y postgresql-client
         gem install brakeman
-        gem install rspec-rails
-        gem install factory_bot_rails
-        gem install database_cleaner
+
+    - name: Wait for Postgres
+      run: |
+        until pg_isready -h localhost -p 5432; do
+          echo "Waiting for PostgreSQL to become ready..."
+          sleep 1
+        done
 
     - name: Initialize database
       run: |
