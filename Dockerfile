@@ -32,6 +32,12 @@ RUN bundle config set --local without 'production' \
 COPY --chown=ruby:ruby package.json *yarn* ./
 RUN yarn install
 
+# npx のバージョン確認 (デバッグ用)
+RUN npx -v
+
+# tailwindcss の存在確認 (デバッグ用)
+RUN yarn list | grep tailwindcss
+
 ARG RAILS_ENV="production"
 ARG NODE_ENV="production"
 ENV RAILS_ENV="${RAILS_ENV}" \
@@ -39,6 +45,7 @@ ENV RAILS_ENV="${RAILS_ENV}" \
     PATH="${PATH}:/home/ruby/.local/bin:/node_modules/.bin" \
     USER="ruby"
 
+# ホスト側のソースコードをコンテナにコピー
 COPY --chown=ruby:ruby . .
 
 EXPOSE 3000

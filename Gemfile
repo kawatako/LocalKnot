@@ -84,9 +84,9 @@ group :development do
   gem "web-console"
 
   # アプリケーション起動高速化 (jsbundling-rails, cssbundling-railsを使う場合、無効化することを推奨)
-  gem "spring"
+  # gem "spring"
   # spring使用時、listen gemを使ってファイルの変更を検知する
-  gem "spring-watcher-listen", "~> 2.0.0"
+  # gem "spring-watcher-listen", "~> 2.0.0"
   # Rails アプリケーションのセキュリティ脆弱性を静的に解析するツ
   gem "brakeman"
 
@@ -94,4 +94,4 @@ group :development do
   gem "letter_opener", "~> 1.9.0"
   gem "letter_opener_web", "~> 2.0"
 end
-gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]
+# gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]

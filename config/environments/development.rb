@@ -73,4 +73,6 @@ Rails.application.configure do
   # letter_opener_web 用の設定
   config.action_mailer.delivery_method = :letter_opener_web
   config.action_mailer.perform_deliveries = true
+
+  config.public_file_server.enabled = true
 end

@@ -47,7 +47,7 @@ services:
     # bundle exec rails db:prepare: データベースの作成とスキーマの読み込みまたはマイグレーション
     # rm -f tmp/pids/server.pid: サーバーのプロセス ID ファイルを削除 (サーバーが正常に終了しなかった場合に残っている可能性があるため)
     # ./bin/dev: 開発用のコマンドを実行 (Procfile.dev で定義されているコマンドが実行される)
-    command: bash -c "bundle install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && ./bin/dev"
+    command: bash -c "bundle install && rm -f tmp/pids/server.pid && ./bin/dev"
     # TTY を有効化 (コンテナ内で対話的な操作を可能にする)
     tty: true
     # 標準入力を開く (コンテナ内で対話的な操作を可能にする)
