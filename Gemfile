@@ -92,6 +92,6 @@ group :development do
 
   # 開発環境でメールをプレビュー
   gem "letter_opener", "~> 1.9.0"
-  gem "letter_opener_web", "~> 2.0"
+  gem "letter_opener_web", "~> 3.0"
 end
 # gem "rubocop-rspec_rails", "~> 2.30", groups: [:development, :test]
