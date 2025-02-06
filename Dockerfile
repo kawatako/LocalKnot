@@ -1,79 +1,91 @@
-# syntax=docker/dockerfile:1
-# check=error=true
+# 開発環境用のステージ
+ARG UID=1000
+ARG GID=1000
+FROM ruby:3.2.3 AS development
 
-ARG RUBY_VERSION=3.2.3
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+WORKDIR /app
 
-# Rails app lives here
-WORKDIR /rails
+# 環境変数 LANG を設定。文字エンコーディングを C.UTF-8 に設定します。
+ENV LANG C.UTF-8
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# 環境変数 TZ を設定。タイムゾーンを Asia/Tokyo に設定します。
+ENV TZ Asia/Tokyo
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+# 必要なパッケージをインストール
+RUN apt-get update -qq && apt-get install -y --no-install-recommends build-essential curl git libpq-dev
+# Node.js と Yarn をインストール
+RUN curl -sSL https://deb.nodesource.com/setup_18.x | bash - \
+  && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list \
+  && apt-get update && apt-get install -y --no-install-recommends nodejs yarn \
+  && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
+  && apt-get clean \
+  && groupadd -g "${GID}" ruby \
+  && useradd --create-home --no-log-init -u "${UID}" -g "${GID}" ruby \
+  && mkdir /node_modules && chown ruby:ruby -R /node_modules /app
 
-# Throw-away build stage to reduce size of final image
-FROM base AS build
+# ユーザーをrubyに変更
+USER ruby
 
-# Install packages needed to build gems and node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev node-gyp pkg-config python-is-python3 && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+# Railsをインストール
+RUN gem install rails -v '7.1.3'
 
-# Install JavaScript dependencies
-ARG NODE_VERSION=20.18.2
-ARG YARN_VERSION=1.22.22
-ENV PATH=/usr/local/node/bin:$PATH
-RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
-    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
-    npm install -g yarn@$YARN_VERSION && \
-    rm -rf /tmp/node-build-master
+# ホスト側の Gemfile と Gemfile.lock をコンテナにコピー
+COPY --chown=ruby:ruby Gemfile* ./
+RUN bundle config set --local without 'production' \
+    && bundle install --jobs "$(nproc)"
 
-# Install application gems
-COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+COPY --chown=ruby:ruby package.json *yarn* ./
+RUN yarn install
 
-# Install node modules
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# npx のバージョン確認 (デバッグ用)
+RUN npx -v
 
-# Copy application code
-COPY . .
+# tailwindcss の存在確認 (デバッグ用)
+RUN yarn list | grep tailwindcss
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+# ホスト側のソースコードをコンテナにコピー
+COPY --chown=ruby:ruby . .
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# yarn build を実行
+RUN yarn build && yarn build:css
 
+# 本番環境用のステージ
+FROM ruby:3.2.3 AS production
 
-RUN rm -rf node_modules
+WORKDIR /app
 
+# 必要なパッケージをインストール
+RUN apt-get update -qq && apt-get install -y --no-install-recommends libpq-dev curl
+RUN curl -sSL https://deb.nodesource.com/setup_18.x | bash - \
+  && curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list \
+  && apt-get update && apt-get install -y --no-install-recommends nodejs yarn \
+  && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
+  && apt-get clean
 
-# Final stage for app image
-FROM base
+# Railsをインストール
+RUN gem install rails -v '7.1.3'
 
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
+COPY --from=development /usr/local/bundle/ /usr/local/bundle/
+COPY --from=development /app/public/assets /app/public/assets
+COPY --from=development /app/node_modules /app/node_modules
+COPY --from=development /app /app
 
-# Run and own only the runtime files as a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
+# プロジェクトで使用する環境変数を設定
+ARG RAILS_ENV="production"
+ARG NODE_ENV="production"
+ARG RACK_ENV="production"
+ARG RAILS_SERVE_STATIC_FILES="true"
+ARG RAILS_LOG_TO_STDOUT="true"
 
-# Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENV RAILS_ENV="${RAILS_ENV}" \
+    NODE_ENV="${NODE_ENV}" \
+    RACK_ENV="${RACK_ENV}" \
+    RAILS_SERVE_STATIC_FILES="${RAILS_SERVE_STATIC_FILES}" \
+    RAILS_LOG_TO_STDOUT="${RAILS_LOG_TO_STDOUT}" \
+    PATH="${PATH}:/app/node_modules/.bin"
 
-# Start server via Thruster by default, this can be overwritten at runtime
-EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+EXPOSE 3000
+
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
