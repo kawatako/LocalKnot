@@ -38,9 +38,6 @@ RUN npx -v
 # tailwindcss の存在確認 (デバッグ用)
 RUN yarn list | grep tailwindcss
 
-# yarn build を実行
-RUN yarn build && yarn build:css
-
 ARG RAILS_ENV="production"
 ARG NODE_ENV="production"
 ENV RAILS_ENV="${RAILS_ENV}" \
@@ -50,6 +47,7 @@ ENV RAILS_ENV="${RAILS_ENV}" \
 
 # ホスト側のソースコードをコンテナにコピー
 COPY --chown=ruby:ruby . .
+RUN yarn build && yarn build:css
 
 EXPOSE 3000
 
