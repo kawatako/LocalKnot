@@ -1,0 +1,12 @@
+<%# app/views/home/index.html.erb %>
+<h1>ようこそ！</h1>
+<p>ここはホーム画面です。</p>
+
+<%# ログインしている場合 %>
+<% if user_signed_in? %>
+  <p>こんにちは、<%= current_user.email %>さん！</p>
+<%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": :delete } %>
+<% else %>
+  <%= link_to "ログイン", new_user_session_path %>
+  <%= link_to "新規登録", new_user_registration_path %>
+<% end %>
