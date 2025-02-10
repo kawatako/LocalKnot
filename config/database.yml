@@ -6,6 +6,9 @@ default: &default
 development:
   <<: *default
   database: myapp_development
+  host: db 
+  username: postgres
+  password: password
 
 test:
   <<: *default

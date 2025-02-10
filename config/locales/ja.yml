@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    attributes:
+      profile:
+        gender: 性別
+    enums:
+      profile:
+        gender:
+        genders:
+          male: "男性"
+          female: "女性"
+          other: "その他"

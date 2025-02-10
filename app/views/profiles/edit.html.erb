@@ -1,0 +1,50 @@
+<h1>プロフィール編集</h1>
+
+<%= form_with(model: @profile, url: profile_path, method: :patch, local: true, multipart: true) do |form| %>
+  <% if @profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@profile.errors.count, "error") %> prohibited this profile from being saved:</h2>
+
+      <ul>
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_name, "ニックネーム" %>
+    <%= form.text_field :user_name %>
+  </div>
+
+  <div>
+    <%= form.label :introduction, "自己紹介" %>
+    <%= form.text_area :introduction %>
+  </div>
+
+  <div>
+    <%= form.label :avatar, "プロフィール画像" %>
+    <%= form.file_field :avatar %>
+    <%= form.hidden_field :avatar_cache %>
+  </div>
+
+  <div>
+    <%= form.label :birthdate, "生年月日" %>
+    <%= form.date_field :birthdate %>
+  </div>
+
+  <div>
+    <%= form.label :gender, "性別" %>
+    <%= form.select :gender, Profile.genders.keys.map { |key| [Profile.human_attribute_name("gender.#{key}"), key] }, include_blank: "選択してください" %>
+  </div>
+
+  <div>
+    <%= form.label :website, "ウェブサイト" %>
+    <%= form.text_field :website %>
+  </div>
+
+  <div>
+    <%= form.submit "更新する" %>
+  </div>
+<% end %>

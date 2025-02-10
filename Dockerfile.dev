@@ -26,7 +26,7 @@ RUN apt-get update -qq \
 && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # 再度 apt-get を使ってパッケージリストを更新し、必要なパッケージをインストールします。
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs yarn vim
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs yarn vim imagemagick
 
 # コンテナ内に /myapp ディレクトリを作成します。
 RUN mkdir /myapp
@@ -40,14 +40,17 @@ ARG GID=1000
 RUN groupadd -g "${GID}" ruby \
     && useradd --create-home --no-log-init -u "${UID}" -g "${GID}" ruby \
     && mkdir /node_modules && chown ruby:ruby -R /node_modules /myapp
+
+# USER ruby を bundle install より前に移動
 USER ruby
 
-# bundler をインストールします。
+# bundler をインストールします。(USER ruby の後で実行)
 RUN gem install bundler
 
 # ホストマシンのGemfile と Gemfile.lockを、コンテナの /myapp ディレクトリにコピーします。
 COPY --chown=ruby:ruby Gemfile* /myapp/
-RUN bundle config set --local without 'production' && bundle install
+# ここで bundle install を実行 (USER ruby で実行)
+RUN bundle install
 
 # ホストマシンのpackage.jsonとyarn.lockを、コンテナの /myapp ディレクトリにコピーします。
 COPY --chown=ruby:ruby package.json yarn.lock /myapp/

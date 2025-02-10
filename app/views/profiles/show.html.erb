@@ -1,0 +1,55 @@
+<h1>
+  <% if @profile.user_name.present? %>
+    <%= @profile.user_name %> のプロフィール
+  <% else %>
+    プロフィール
+  <% end %>
+</h1>
+
+<% if @profile.new_record? %>
+  <p>まだプロフィールが登録されていません。</p>
+  <%= link_to "プロフィールを登録する", edit_profile_path %>
+<% else %>
+  <p>
+    <strong>ニックネーム:</strong>
+    <%= @profile.user_name %>
+  </p>
+
+  <p>
+    <strong>自己紹介:</strong>
+    <%= simple_format(@profile.introduction) %>
+  </p>
+
+  <p>
+    <strong>生年月日:</strong>
+    <%= @profile.birthdate&.strftime("%Y年%m月%d日") %>
+  </p>
+
+  <p>
+    <strong>性別:</strong>
+    <%= @profile.gender_i18n %>
+  </p>
+
+  <p>
+    <strong>ウェブサイト:</strong>
+    <% if @profile.website.present? %>
+      <%= link_to @profile.website, @profile.website, target: "_blank", rel: "noopener noreferrer" %>
+    <% else %>
+      (未登録)
+    <% end %>
+  </p>
+
+  <% if @profile.avatar.present? %>
+  <strong>プロフィール画像: </strong><br>
+  <p>
+    <%= image_tag @profile.avatar.url %>
+    <%= image_tag @profile.avatar.thumb.url %>
+  </p>
+  <% else %>
+  <p>
+    <%= image_tag "default_avatar.png", alt: "デフォルトのプロフィール画像" %>
+  </p>
+  <% end %>
+
+  <%= link_to "プロフィールを編集", edit_profile_path %>
+<% end %>
