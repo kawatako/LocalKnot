@@ -5,13 +5,11 @@ class Profile < ApplicationRecord
 
   enum gender: { male: 0, female: 1, other: 2 }, _prefix: true
 
-  validates :user_name, presence: true
-
-  # CarrierWave でのバリデーション
+  # カスタムバリデーターを使用
   validates :avatar, file_size: { less_than: 5.megabytes },
-                     file_content_type: { allow: ['image/jpeg', 'image/png', 'image/gif'] }
+                     file_content_type: { allow: [ "image/jpeg", "image/png", "image/gif" ] }
 
-  # enum gender の値を、国際化対応 (i18n) された文字列に変換するためのメソッド                   
+  # enum gender の値を、国際化対応 (i18n) された文字列に変換するためのメソッド
   def gender_i18n
     I18n.t("activerecord.attributes.profile.genders.#{gender}")
   end

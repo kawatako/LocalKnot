@@ -52,11 +52,13 @@ gem "ransack"
 # 起動高速化
 gem "bootsnap", require: false
 
-gem 'carrierwave'
+gem "carrierwave", "~> 2.0"
 # AWS S3 を使い画像保存
-gem 'fog-aws' 
-#画像の作成、編集、変換などを行う
-gem 'mini_magick' 
+gem "fog-aws"
+# 画像の作成、編集、変換などを行う
+gem "mini_magick"
+
+gem "stringio", "~> 3.1.2"
 
 # 開発・テスト環境用
 group :development, :test do
@@ -85,7 +87,7 @@ group :development, :test do
   gem "database_cleaner"
 
   # 開発環境で.envファイルを読み込むためのgem
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
 end
 
 # 開発環境用

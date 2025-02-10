@@ -23,16 +23,16 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # リサイズ (必要に応じてバージョンを追加)
   version :thumb do
-    process resize_to_fill: [100, 100] # 100x100 にリサイズ (はみ出る部分はカット)
+    process resize_to_fill: [ 100, 100 ] # 100x100 にリサイズ (はみ出る部分はカット)
   end
 
   version :display do
-    process resize_to_limit: [400, 400] # 400x400 にリサイズ (はみ出さないように調整)
+    process resize_to_limit: [ 400, 400 ] # 400x400 にリサイズ (はみ出さないように調整)
   end
 
   # 許可する拡張子
   def extension_allowlist
-    %w(jpg jpeg gif png)
+    %w[jpg jpeg gif png]
   end
 
   # ファイル名を変更 (必要に応じて)

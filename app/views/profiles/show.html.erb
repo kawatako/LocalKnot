@@ -42,7 +42,6 @@
   <% if @profile.avatar.present? %>
   <strong>プロフィール画像: </strong><br>
   <p>
-    <%= image_tag @profile.avatar.url %>
     <%= image_tag @profile.avatar.thumb.url %>
   </p>
   <% else %>
