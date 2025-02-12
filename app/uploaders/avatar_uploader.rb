@@ -17,8 +17,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # デフォルト画像のパス (必要に応じて)
   def default_url(*args)
-    # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_')) # assets pipeline を使う場合
-    "/assets/default_avatar.png" # public/assets/images に default_avatar.png を配置
+    "/assets/default_avatar.png"
   end
 
   # リサイズ (必要に応じてバージョンを追加)

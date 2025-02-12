@@ -1,0 +1,20 @@
+<h1> タイトル: <%= @question.title %></h1>
+<p>投稿者: <%= @question.user.profile.try(:username) || '名無しさん' %></p>
+<p>投稿日時: <%= @question.created_at %></p>
+<p>スポット:<%= @question.spot.name %></p>
+
+<p><%= simple_format(@question.body) %></p>
+
+<% if @question.user == current_user %>
+  <%= link_to "編集", edit_question_path(@question) %>
+  <%= link_to "削除", question_path(@question), data: { "turbo-method": :delete, "turbo_confirm": "本当に削除しますか？" } %>
+<% end %>
+
+<h2>回答一覧</h2>
+
+<div id="answers">
+  <%= render @answers %>
+</div>
+
+<h2>回答投稿</h2>
+<%= render "answers/form", question: @question, answer: @answer %>
