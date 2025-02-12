@@ -52,7 +52,7 @@ gem "ransack"
 # 起動高速化
 gem "bootsnap", require: false
 
-gem "carrierwave", "~> 2.0"
+gem "carrierwave", "~> 3.0"
 # AWS S3 を使い画像保存
 gem "fog-aws"
 # 画像の作成、編集、変換などを行う
