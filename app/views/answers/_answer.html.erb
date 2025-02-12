@@ -1,0 +1,11 @@
+<div class="answer">
+  <p>
+    <p>回答者: <strong><%= @question.user.profile.try(:username) || '名無しさん' %></strong></p>
+    <p>回答: <%= answer.body %></p>
+    <p>回答日: (<%= answer.created_at %>)</p>
+     <% if answer.user == current_user %>
+      <%= link_to "編集", edit_question_answer_path(answer.question, answer) %>
+      <%= link_to "削除", question_answer_path(answer.question, answer), data: { "turbo-method": :delete, "turbo_confirm": "本当に削除しますか？" } %>
+    <% end %>
+  </p>
+</div>

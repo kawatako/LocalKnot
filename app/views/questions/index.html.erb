@@ -1,0 +1,19 @@
+<h1>質問一覧</h1>
+
+<%= link_to "新規質問作成", new_question_path %>
+
+<ul>
+  <% @questions.each do |question| %>
+    <li>
+      <%= link_to question.title, question_path(question) %>
+      <p>(<%= question.user.try(:profile).try(:username) || '名無しさん' %>)</p>
+      <% if question.spot.present? %>
+        <p>スポット: <%= question.spot.name %></p>
+      <% end %>
+      <% if question.category.present? %>
+        <p>カテゴリ: <%= question.category.name %></p>
+      <% end %>
+      <p> 作成日: <%= question.created_at %> </p>
+    </li>
+  <% end %>
+</ul>

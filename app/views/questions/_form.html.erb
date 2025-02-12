@@ -1,0 +1,37 @@
+<%= form_with(model: question, local: true) do |form| %>
+  <% if question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(question.errors.count, "error") %> prohibited this question from being saved:</h2>
+
+      <ul>
+        <% question.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title, 'タイトル' %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :body, '本文' %>
+    <%= form.text_area :body %>
+  </div>
+
+  <div class="field">
+  <%= form.label :spot_name, 'スポット' %>
+  <%= form.text_field :spot_name, include_blank: "場所や施設を入力してください"%>
+  </div>
+
+  <div class="field">
+    <%= form.label :category_id, 'カテゴリ' %>
+    <%= form.collection_select :category_id, Category.all, :id, :name, include_blank: "カテゴリを選択してください" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
