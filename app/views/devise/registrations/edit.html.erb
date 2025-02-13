@@ -1,0 +1,52 @@
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+    <div class="card w-full max-w-md bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">ユーザー情報編集</h2>
+
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <div class="form-control">
+                <%= f.label :email, "メールアドレス", class:"label" %>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input input-bordered" %>
+            </div>
+
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+            <% end %>
+
+            <div class="form-control">
+                <%= f.label :password, "パスワード", class:"label" %>
+                <i>(変更しない場合は空白)</i>
+                <%= f.password_field :password, autocomplete: "new-password", class:"input input-bordered" %>
+                <% if @minimum_password_length %>
+
+                <em><%= @minimum_password_length %> 文字以上</em>
+                <% end %>
+            </div>
+
+            <div class="form-control">
+                <%= f.label :password_confirmation, "パスワード(確認)", class:"label" %>
+                <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"input input-bordered" %>
+            </div>
+
+            <div class="form-control">
+                <%= f.label :current_password, "現在のパスワード", class:"label" %>
+                <i>(変更を確認するために必要です)</i>
+                <%= f.password_field :current_password, autocomplete: "current-password", class:"input input-bordered" %>
+            </div>
+
+            <div class="card-actions justify-center mt-4">
+                <%= f.submit "更新", class:"btn btn-primary" %>
+            </div>
+            <% end %>
+
+            <h3 class="text-lg font-bold mt-8">アカウント削除</h3>
+
+            <p>本当にアカウントを削除しますか？</p>
+            <%= button_to "アカウント削除", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class:"btn btn-error" %>
+
+            <%= render "devise/shared/links" %>
+        </div>
+    </div>
+</div>
