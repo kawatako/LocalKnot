@@ -2,7 +2,7 @@
   <div class="card-body">
     <h2 class="card-title"><%= link_to question.title, question_path(question) %></h2>
     <p class="text-sm">
-    投稿者: <%= link_to question.user.try(:profile).try(:user_name) || '名無しさん', profile_path(question.user) %>
+      投稿者: <%= link_to question.user.try(:profile).try(:user_name) || '名無しさん', profile_path(question.user) %>
       <span class="mx-1">|</span>
       投稿日時: <%= l question.created_at, format: :short %>
       <% if question.spot.present? %>
