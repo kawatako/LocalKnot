@@ -1,9 +1,37 @@
-<h1>質問一覧</h1>
+<%# app/views/questions/index.html.erb %>
+<h1 class="text-3xl font-bold mb-4">質問一覧</h1>
 
 <%= link_to "新しい質問を投稿する", new_question_path, class: "btn btn-primary mb-4" %>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  <% @questions.each do |question| %>
-    <%= render "questions/question_card", question: question %>
-  <% end %>
-</div>
+<%# 検索フォーム %>
+<%= search_form_for @q, url: questions_path, class: "mb-4" do |f| %>
+  <div class="flex flex-wrap items-end gap-4">
+    <div class="form-control w-full md:w-1/2 lg:w-3/4">
+      <%= f.label :title_or_body_or_spot_name_cont, "キーワード", class: "label" %>
+      <%= f.search_field :title_or_body_or_spot_name_cont, class: "input input-bordered" %>
+    </div>
+
+    <div class="form-control w-full md:w-1/2 lg:w-1/4">
+      <%= f.label :category_id_eq, 'カテゴリ', class: "label" %>
+      <%= f.collection_select :category_id_eq, Category.all, :id, :name, { include_blank: 'カテゴリを選択' }, { class: 'select select-bordered' } %>
+    </div>
+
+    <div class="form-control">
+      <%= f.submit "検索", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<%# 検索結果 %>
+<% if @questions.present? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @questions.each do |question| %>
+      <%= render "questions/question_card", question: question %>
+    <% end %>
+  </div>
+<% else %>
+  <p>検索条件に一致する質問はありません。</p>
+<% end %>
+
+<%# ページネーション %>
+<%= paginate @questions %>

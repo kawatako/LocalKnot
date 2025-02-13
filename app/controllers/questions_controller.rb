@@ -3,7 +3,8 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @questions = Question.all.includes(:user, :spot) # N+1問題を避けるため、includesを使用
+    @q = Question.ransack(params[:q])
+    @questions = @q.result(distinct: true).includes(:user, :spot, :category).order(created_at: :desc).page(params[:page]) # Kaminari の page メソッドを追加
   end
 
   def show
