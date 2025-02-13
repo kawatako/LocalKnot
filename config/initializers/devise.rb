@@ -18,8 +18,8 @@ Devise.setup do |config|
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
-  #Devise のビューにも、アプリケーションの共通レイアウト を適用するために、parent_controller を ApplicationController に設定
-  config.parent_controller = 'ApplicationController'
+  # Devise のビューにも、アプリケーションの共通レイアウト を適用するために、parent_controller を ApplicationController に設定
+  config.parent_controller = "ApplicationController"
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
