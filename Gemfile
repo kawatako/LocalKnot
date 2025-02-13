@@ -60,6 +60,9 @@ gem "mini_magick"
 
 gem "stringio", "~> 3.1.2"
 
+#アセットプリコンパイルに必要
+gem 'sprockets-rails'
+
 # 開発・テスト環境用
 group :development, :test do
   # デバッグ用ツール
