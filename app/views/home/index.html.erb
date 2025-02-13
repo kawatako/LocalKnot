@@ -1,12 +1,15 @@
 <%# app/views/home/index.html.erb %>
-<h1>ようこそ！</h1>
-<p>ここはホーム画面です。</p>
-
-<%# ログインしている場合 %>
-<% if user_signed_in? %>
-  <p>こんにちは、<%= current_user.email %>さん！</p>
-<%= link_to "ログアウト", destroy_user_session_path, data: { "turbo-method": :delete } %>
-<% else %>
-  <%= link_to "ログイン", new_user_session_path %>
-  <%= link_to "新規登録", new_user_registration_path %>
-<% end %>
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">ようこそ、LocalKnot へ！</h1>
+      <p class="py-6">ここは旅行に関する質問ができるコミュニティサイトです。旅行の計画、おすすめスポット、困りごとなど、何でも気軽に質問してください。</p>
+      <% if user_signed_in? %>
+        <%= link_to "質問一覧を見る", questions_path, class: "btn btn-primary" %>
+      <% else %>
+        <%= link_to "ログイン", new_user_session_path, class: "btn btn-primary" %>
+        <%= link_to "新規登録", new_user_registration_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  </div>
+</div>

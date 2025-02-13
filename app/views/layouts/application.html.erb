@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Myapp" %></title>
+    <title><%= content_for(:title) || "LocalKnot" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,7 +22,39 @@
 
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-base-200">
+    <header class="navbar bg-primary text-primary-content">
+      <div class="container mx-auto">
+        <div class="flex-1">
+          <%= link_to "Myapp", root_path, class: "btn btn-ghost text-xl" %>
+        </div>
+        <div class="flex-none">
+          <ul class="menu menu-horizontal px-1">
+            <li><%= link_to "質問一覧", questions_path %></li>
+            <% if user_signed_in? %>
+              <li><%= link_to "質問投稿", new_question_path %></li>
+              <li><%= link_to "プロフィール", profile_path(current_user) %></li>
+              <li>
+                <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
+              </li>
+            <% else %>
+              <li><%= link_to "ログイン", new_user_session_path %></li>
+              <li><%= link_to "新規登録", new_user_registration_path %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+      <%= render "shared/flash_messages" %>
+      <%= yield %>
+    </main>
+
+    <footer class="footer footer-center p-4 bg-primary text-primary-content">
+      <div>
+        <p>Copyright © <%= Time.current.year %> - Localknot</p>
+      </div>
+    </footer>
   </body>
 </html>

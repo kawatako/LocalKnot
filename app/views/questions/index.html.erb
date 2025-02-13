@@ -1,19 +1,9 @@
 <h1>質問一覧</h1>
 
-<%= link_to "新規質問作成", new_question_path %>
+<%= link_to "新しい質問を投稿する", new_question_path, class: "btn btn-primary mb-4" %>
 
-<ul>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
   <% @questions.each do |question| %>
-    <li>
-      <%= link_to question.title, question_path(question) %>
-      <p>(<%= question.user.try(:profile).try(:username) || '名無しさん' %>)</p>
-      <% if question.spot.present? %>
-        <p>スポット: <%= question.spot.name %></p>
-      <% end %>
-      <% if question.category.present? %>
-        <p>カテゴリ: <%= question.category.name %></p>
-      <% end %>
-      <p> 作成日: <%= question.created_at %> </p>
-    </li>
+    <%= render "questions/question_card", question: question %>
   <% end %>
-</ul>
+</div>

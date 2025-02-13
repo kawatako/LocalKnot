@@ -1,20 +1,53 @@
-<h1> タイトル: <%= @question.title %></h1>
-<p>投稿者: <%= @question.user.profile.try(:username) || '名無しさん' %></p>
-<p>投稿日時: <%= @question.created_at %></p>
-<p>スポット:<%= @question.spot.name %></p>
+<%# app/views/questions/show.html.erb %>
+<h1 class="text-3xl font-bold mb-4"><%= @question.title %></h1>
 
-<p><%= simple_format(@question.body) %></p>
+<div class="mb-4">
+  <div class="flex items-center"> <%# flexbox を追加 %>
+    <% if @question.user.profile.present? %>
+      <% if @question.user.profile.avatar.present? %>
+        <%= image_tag @question.user.profile.avatar.thumb.url, class: "rounded-full mr-2", width: 40, height: 40 %>
+      <% else %>
+        <%= image_tag "default_avatar.png", alt: "名無しさん", class: "rounded-full mr-2", width: 40, height: 40 %>
+      <% end %>
+    <% else %>
+      <%= image_tag "default_avatar.png", alt: "名無しさん", class: "rounded-full mr-2", width: 40, height: 40 %>
+    <% end %>
+    <div> <%# 投稿者情報などを囲む div を追加 %>
+      <p class="text-sm">
+        投稿者: <%= link_to @question.user.try(:profile).try(:user_name) || '名無しさん', profile_path(@question.user) %>
+        <% if @question.category.present? %>
+          <span class="mx-1">|</span>
+          カテゴリ: <%= @question.category.name %>
+        <% end %>
+        <% if @question.spot.present? %>
+          <span class="mx-1">|</span>
+          スポット: <%= @question.spot.name %>
+        <% end %>
+        <span class="mx-1">|</span>
+        投稿日時: <%= l @question.created_at, format: :long %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="prose prose-lg mb-8">
+  <%= simple_format(@question.body) %>
+</div>
 
 <% if @question.user == current_user %>
-  <%= link_to "編集", edit_question_path(@question) %>
-  <%= link_to "削除", question_path(@question), data: { "turbo-method": :delete, "turbo_confirm": "本当に削除しますか？" } %>
+  <%= link_to "編集", edit_question_path(@question), class: "btn btn-secondary btn-sm mr-2" %>
+  <%= button_to "削除", question_path(@question),
+    method: :delete,
+    form: { data: { turbo_confirm: '本当に削除しますか？' } },
+    class: "btn btn-error btn-sm" %>
 <% end %>
 
-<h2>回答一覧</h2>
+<h2 class="text-2xl font-bold mt-8 mb-4">回答一覧</h2>
 
 <div id="answers">
   <%= render @answers %>
 </div>
 
-<h2>回答投稿</h2>
+<h2 class="text-2xl font-bold mt-8 mb-4">回答を投稿</h2>
+
 <%= render "answers/form", question: @question, answer: @answer %>

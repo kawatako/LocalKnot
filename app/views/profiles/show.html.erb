@@ -5,11 +5,21 @@
     プロフィール
   <% end %>
 </h1>
+  <% if @profile.new_record? %>
+    <p>まだプロフィールが登録されていません。</p>
+    <%= link_to "プロフィールを登録する", edit_profile_path %>
+  <% else %>
+    
+  <% if @profile.avatar.present? %>
+  <p>
+    <%= image_tag @profile.avatar.thumb.url %>
+  </p>
+  <% else %>
+  <p>
+    <%= image_tag "default_avatar.png", alt: "デフォルトのプロフィール画像" %>
+  </p>
+  <% end %>
 
-<% if @profile.new_record? %>
-  <p>まだプロフィールが登録されていません。</p>
-  <%= link_to "プロフィールを登録する", edit_profile_path %>
-<% else %>
   <p>
     <strong>ニックネーム:</strong>
     <%= @profile.user_name %>
@@ -38,17 +48,6 @@
       (未登録)
     <% end %>
   </p>
-
-  <% if @profile.avatar.present? %>
-  <strong>プロフィール画像: </strong><br>
-  <p>
-    <%= image_tag @profile.avatar.thumb.url %>
-  </p>
-  <% else %>
-  <p>
-    <%= image_tag "default_avatar.png", alt: "デフォルトのプロフィール画像" %>
-  </p>
-  <% end %>
 
   <%= link_to "プロフィールを編集", edit_profile_path %>
 <% end %>

@@ -1,0 +1,8 @@
+<%# app/views/shared/_flash_messages.html.erb %>
+<% flash.each do |message_type, message| %>
+  <div class="alert alert-<%= message_type %> shadow-lg">
+    <div>
+      <span><%= message %></span>
+    </div>
+  </div>
+<% end %>
