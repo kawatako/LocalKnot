@@ -29,7 +29,7 @@ class ProfilesController < ApplicationController
   def ensure_correct_user
     # ログインユーザーとプロフィール編集対象のユーザーが一致するか確認
     unless @profile.user == current_user
-      redirect_to root_path, alert: '権限がありません'
+      redirect_to root_path, alert: "権限がありません"
     end
   end
 
