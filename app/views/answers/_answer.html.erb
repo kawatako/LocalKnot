@@ -1,11 +1,27 @@
-<div class="answer">
-  <p>
-    <p>回答者: <strong><%= @question.user.profile.try(:username) || '名無しさん' %></strong></p>
-    <p>回答: <%= answer.body %></p>
-    <p>回答日: (<%= answer.created_at %>)</p>
-     <% if answer.user == current_user %>
-      <%= link_to "編集", edit_question_answer_path(answer.question, answer) %>
-      <%= link_to "削除", question_answer_path(answer.question, answer), data: { "turbo-method": :delete, "turbo_confirm": "本当に削除しますか？" } %>
-    <% end %>
-  </p>
+<div class="card bg-base-100 shadow-md mb-4">
+    <div class="card-body">
+        <div class="flex items-center mb-2">
+         <% if answer.user.profile.present? %>
+            <% if answer.user.profile.avatar.present? %>
+              <%= image_tag answer.user.profile.avatar.thumb.url, class: "rounded-full mr-2", width: 40, height: 40 %>
+            <% else %>
+              <%= image_tag "default_avatar.png", alt: "名無しさん", class: "rounded-full mr-2", width: 40, height: 40 %>
+            <% end %>
+          <% else %>
+            <%= image_tag "default_avatar.png", alt: "名無しさん", class: "rounded-full mr-2", width: 40, height: 40 %>
+          <% end %>
+            <div>
+                <p class="font-bold"><%= link_to answer.user.try(:profile).try(:user_name) || '名無しさん', profile_path(answer.user) %></p>
+                <p class="text-sm text-gray-500"><%= l answer.created_at, format: :long %></p>
+            </div>
+             <% if answer.user == current_user %>
+              <%= link_to "編集", edit_question_answer_path(answer.question, answer),class:"mx-10" %>
+              <%= button_to "削除", question_answer_path(answer.question, answer),
+                method: :delete,
+                form: { data: { turbo_confirm: '本当に削除しますか？' } },
+                class: "btn btn-error btn-sm" %>
+            <% end %>
+        </div>
+        <p><%= simple_format(answer.body) %></p>
+    </div>
 </div>
