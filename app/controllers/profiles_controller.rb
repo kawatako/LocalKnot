@@ -23,16 +23,15 @@ class ProfilesController < ApplicationController
   private
 
   def set_profile
-    if params[:id]
-      @profile = Profile.find_by(user_id: params[:id]) # 他のユーザーのプロフィール
-    else
-      @profile = current_user.profile || current_user.build_profile # 自分のプロフィール
-    end
+    @profile = current_user.profile || current_user.build_profile
   end
 
-    def ensure_correct_user
-     redirect_to root_path, alert: "権限がありません" unless current_user == @profile.user
+  def ensure_correct_user
+    # ログインユーザーとプロフィール編集対象のユーザーが一致するか確認
+    unless @profile.user == current_user
+      redirect_to root_path, alert: '権限がありません'
     end
+  end
 
   def profile_params
     params.require(:profile).permit(:user_name, :introduction, :avatar, :avatar_cache, :birthdate, :gender, :website)
