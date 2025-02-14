@@ -1,0 +1,9 @@
+<% if liked_by?(answer) %>
+  <%= button_to question_answer_likes_path(answer.question, answer), method: :delete, class: "btn", data: {turbo_stream: true} do %>
+    <i class="fas fa-heart text-red-500"></i> <%= answer.likes.count %>
+  <% end %>
+<% else %>
+  <%= button_to question_answer_likes_path(answer.question, answer), method: :post, class: "btn", data: {turbo_stream: true} do %>
+    <i class="far fa-heart"></i> <%= answer.likes.count %>
+  <% end %>
+<% end %>
