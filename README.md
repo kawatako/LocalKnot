@@ -130,8 +130,6 @@ foratravel:海外のサービスで、検索範囲は広い代わりにデザイ
 * devise: 認証機能全般  
 * devise-i18n: Devise のメッセージを日本語化 (オプション)  
 * Action Mailer: メール送信  
-* SendGrid (または他のメール配信サービス): メール配信 (オプション)  
-* Sidekiq: メール送信の非同期化 (オプション)  
 
 ### 2. プロフィール機能
 #### 必要な機能:
@@ -159,15 +157,10 @@ foratravel:海外のサービスで、検索範囲は広い代わりにデザイ
 * AnswerLike
 #### 関連モデル
 * User (Question, Answer は User に belongs_to で関連付け)  
-* Category (Question と Category は多対多、中間テーブル Categorizable を使用、ポリモーフィック関連)  
-* Area (Question と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
+* Spots (Question と Area は多対多、中間テーブル Localization を使用、ポリモーフィック関連)  
 #### 使用 gem や技術
 * Ransack または pg_search: キーワード検索  
 * Kaminari : ページネーション  
-
-### 4.その他
-Category と Areaモデルは、BlogとQuestion の両方に関連付けられます。  
-中間テーブルとして、ポリモーフィック関連を使った Categorizable と Localization を使用します。
 
 ## ◇ 本リリース関連
 ### 1. ブログ機能
@@ -319,3 +312,7 @@ Category と Areaモデルは、BlogとQuestion の両方に関連付けられ�
 #### 使用 gem や技術
 * i18n: Rails の国際化機能  
 * i18n-js: JavaScript での国際化対応 (オプション)  
+
+
+# ■ ER図
+MVP:https://drive.google.com/file/d/1axkZ_jMgdmXJNdX6wBIuBc-ObnVgsc7X/view?usp=drive_link
