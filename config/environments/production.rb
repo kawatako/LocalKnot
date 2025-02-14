@@ -62,12 +62,12 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
+    address:              "smtp.gmail.com",
     port:                 587,
-    domain:               'gmail.com', # または、あなたのカスタムドメイン
-    user_name:            ENV['GMAIL_USERNAME'], # 環境変数
-    password:             ENV['GMAIL_APP_PASSWORD'], # 環境変数 (アプリパスワード)
-    authentication:       'plain',
+    domain:               "gmail.com", # または、あなたのカスタムドメイン
+    user_name:            ENV["GMAIL_USERNAME"], # 環境変数
+    password:             ENV["GMAIL_APP_PASSWORD"], # 環境変数 (アプリパスワード)
+    authentication:       "plain",
     enable_starttls_auto: true
   }
 
