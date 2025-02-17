@@ -35,7 +35,7 @@ gem "redis", "~> 5.0"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 # バックグラウンドジョブ処理
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 7.3"
 
 # ユーザー認証機能
 gem "devise"
