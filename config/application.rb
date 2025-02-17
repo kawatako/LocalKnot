@@ -27,5 +27,6 @@ module Myapp
 
     # Add app/uploaders to the autoload paths
     config.autoload_paths += %W[#{config.root}/app/validators]
+    config.i18n.default_locale = :ja
   end
 end

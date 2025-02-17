@@ -3,7 +3,18 @@ en:
     attributes:
       profile:
         gender: Gender
-        genders:
-          male: Male
-          female: Female
-          other: Other
+    enums:
+      profile:
+        gender:
+          male: "Male"
+          female: "Female"
+          other: "Other"
+  errors:
+    messages:
+      too_large: "is too large (should be less than %{count}MB)"
+      content_type_invalid: "must be one of %{allowed_types}"
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M:%S"
+      long: "%Y-%m-%d %H:%M:%S %Z"
+      short: "%b %d %H:%M"
