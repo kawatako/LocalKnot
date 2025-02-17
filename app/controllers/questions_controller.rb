@@ -21,7 +21,8 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: "質問を投稿しました。"
     else
-      render :new
+      flash.now[:alert] = "質問の投稿に失敗しました。"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -38,7 +39,8 @@ class QuestionsController < ApplicationController
         if @question.update(question_params)
           redirect_to @question, notice: "質問を更新しました。"
         else
-          render :edit
+          flash.now[:alert] = "質問の更新に失敗しました。"
+          render :edit, status: :unprocessable_entity
         end
       else
           redirect_to @question, alert: "権限がありません"

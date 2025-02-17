@@ -1,19 +1,6 @@
 <%= form_with(model: question, local: true) do |form| %>
-  <% if question.errors.any? %>
-      <div class="alert alert-error">
-        <div class="flex-1">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
-          </svg>
-          <label><%= pluralize(question.errors.count, "error") %> prohibited this question from being saved:</label>
-        </div>
-      </div>
-    <ul>
-      <% question.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  <% end %>
+
+  <%= render "shared/error_messages", object: form.object %>
 
   <div class="form-control">
     <%= form.label :title, 'タイトル', class: "label" %>
@@ -31,8 +18,8 @@
   </div>
 
   <div class="form-control">
-      <%= form.label :category_id, 'カテゴリ', class: "label" %>
-      <%= form.select :category_id, Category.all.map { |c| [c.name, c.id] }, { include_blank: 'カテゴリを選択' }, { class: 'select select-bordered' } %>
+    <%= form.label :category_id, 'カテゴリ', class: "label" %>
+    <%= form.select :category_id, Category.all.map { |c| [c.name, c.id] }, { include_blank: 'カテゴリを選択' }, { class: 'select select-bordered' } %>
   </div>
 
   <div class="mt-4">
