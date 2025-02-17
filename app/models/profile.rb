@@ -11,6 +11,6 @@ class Profile < ApplicationRecord
 
   # enum gender の値を、国際化対応 (i18n) された文字列に変換するためのメソッド
   def gender_i18n
-    I18n.t("activerecord.attributes.profile.genders.#{gender}")
+    I18n.t("activerecord.enums.profile.gender.#{gender}")
   end
 end

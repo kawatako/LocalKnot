@@ -36,7 +36,7 @@
 
   <div>
     <%= form.label :gender, "性別" %>
-    <%= form.select :gender, Profile.genders.keys.map { |key| [Profile.human_attribute_name("gender.#{key}"), key] }, include_blank: "選択してください" %>
+  <%= form.select :gender, Profile.genders.keys.map { |key| [I18n.t("activerecord.enums.profile.gender.#{key}"), key] }, include_blank: "選択してください" %>
   </div>
 
   <div>

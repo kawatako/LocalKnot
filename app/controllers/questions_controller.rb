@@ -30,6 +30,7 @@ class QuestionsController < ApplicationController
     if @question.user != current_user
         redirect_to @question, alert: "権限がありません"
     end
+    @question.spot_name = @question.spot.name if @question.spot.present?
   end
 
   def update
