@@ -1,0 +1,41 @@
+ja:
+  devise:
+    confirmations:
+      new:
+        resend_confirmation_instructions: "確認メールを再送する"
+    mailer:
+      confirmation_instructions:
+        confirm_my_account: "アカウントを有効にする"
+      reset_password_instructions:
+        change_my_password: "パスワードを変更する"
+      unlock_instructions:
+        unlock_my_account: "アカウントのロックを解除する"
+    passwords:
+      edit:
+        change_your_password: "パスワードを変更"
+      new:
+        forgot_your_password: "パスワードを忘れましたか？"
+        send_me_reset_password_instructions: "パスワード再設定メールを送信"
+    registrations:
+      edit:
+        title: "アカウント情報編集"
+        edit: "編集"
+        update: "更新"
+        cancel_my_account: "アカウントを削除する"
+        are_you_sure: "本当に削除しますか？"
+      new:
+        sign_up: "新規登録"
+      shared:
+        links:
+          sign_in: "ログイン"
+          sign_up: "新規登録"
+          forgot_your_password: "パスワードを忘れましたか？"
+          didn_t_receive_confirmation_instructions: "確認メールが届かない場合"
+          didn_t_receive_unlock_instructions: "ロック解除メールが届かない場合"
+          sign_in_with_provider: "%{provider} でログイン"
+      update: "更新"
+    sessions:
+      new:
+        sign_in: "ログイン"
+        remember_me: "ログイン状態を保持する"
+      destroy: "ログアウト"

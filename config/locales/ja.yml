@@ -1,6 +1,19 @@
 ja:
   activerecord:
+    models:
+      question: 質問
     attributes:
+      question:
+        title: タイトル
+        body: 本文
+        spot_name: スポット名
+        category_id: カテゴリ
+        user_id: 投稿者
+        created_at: 投稿日時
+        updated_at: 更新日時
+      user:
+        email: メールアドレス
+        password: パスワード
       profile:
         gender: 性別
     enums:
@@ -9,12 +22,45 @@ ja:
           male: "男性"
           female: "女性"
           other: "その他"
-  errors:
+    errors: # この errors は activerecord の中
+      models:
+        question:
+          attributes:
+            title:
+              blank: "タイトルを入力してください"
+            body:
+              blank: "本文を入力してください"
+        user:
+          attributes:
+            email:
+              taken: "はすでに登録されています"
+              blank: "を入力してください"
+            password_confirmation:
+              confirmation: "がパスワードと一致しません"
+            password:
+              too_short: "は%{count}文字以上に設定して下さい"
+              blank: "を入力してください"
+
+  errors: # この errors は ja: の直下 (グローバル)
     messages:
       too_large: "は%{count}MBより小さくしてください"
       content_type_invalid: "は%{allowed_types}のいずれかの形式である必要があります"
+    format: "%{attribute}%{message}" # デフォルトのエラーメッセージ形式
+    template:
+      body: "以下の問題があったため、%{model}を保存できませんでした:" # ここを修正
+      header:
+        one: "%{model}にエラーが1つあります" # ここを修正
+        other: "%{model}にエラーが%{count}つあります" # ここを修正
+
   time:
     formats:
       default: "%Y/%m/%d %H:%M:%S"
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %Z"
-      short: "%m/%d %H:%M" 
+      short: "%m/%d %H:%M"
+
+  date:
+    formats:
+      default: "%Y/%m/%d"
+      long: "%Y年%m月%d日(%a)"
+      short: "%Y/%m/%d"
+    # ... (省略) ...
