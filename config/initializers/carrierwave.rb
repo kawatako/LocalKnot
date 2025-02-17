@@ -16,7 +16,7 @@ CarrierWave.configure do |config|
       # endpoint:              'https://s3.example.com:8080' # optional, defaults to nil
     }
     config.fog_directory  = ENV["S3_BUCKET_NAME"]           # required
-    # config.fog_public     = false                                                 # optional, defaults to true
+    config.fog_public     = false                                                 # optional, defaults to true
     # config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" } # optional, defaults to {}
   end
 end
