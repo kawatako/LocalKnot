@@ -29,7 +29,7 @@ gem "cssbundling-rails"
 gem "jbuilder"
 
 # Redis クライアント
-gem "redis", "~> 5.0"
+gem "redis", "~> 5.4"
 
 # Windows で必要となるタイムゾーン情報
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
