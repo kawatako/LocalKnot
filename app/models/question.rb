@@ -3,6 +3,9 @@ class Question < ApplicationRecord
   belongs_to :spot, optional: true
   belongs_to :category, optional: true
   has_many :answers, dependent: :destroy
+  belongs_to :best_answer, class_name: "Answer", optional: true
+  has_many :answers, dependent: :destroy
+  before_save :set_resolved
 
   attr_accessor :spot_name  # 仮想属性 spot_name を追加
 
@@ -29,5 +32,9 @@ class Question < ApplicationRecord
   # Ransackで関連先も含めて検索許可
   def self.ransackable_associations(auth_object = nil)
     [ "spot", "category", "user", "answers" ]
+  end
+  #best_answer_idがある場合はresolvedをtrueにする処理
+  def set_resolved
+    self.resolved = best_answer_id.present?
   end
 end
