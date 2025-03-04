@@ -1,22 +1,30 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [ :index, :show ] # deviseのヘルパー。ログイン必須(index,show以外)
-  before_action :set_question, only: [ :show, :edit, :update, :destroy ]
+  before_action :authenticate_user!, except: [ :index, :show ] 
+  before_action :set_question, only: [ :show, :edit, :update, :destroy, :choose_best_answer, :remove_best_answer ]
 
   def index
     @q = Question.ransack(params[:q])
     @questions = @q.result(distinct: true).includes(:user, :spot, :category)
   
-    if params[:sort] == 'answers_count'
+    case params[:sort]
+    when 'answers_count'
+      # 回答数順 (回答数が多い順)
       @questions = @questions.left_joins(:answers)
                              .group('questions.id')
                              .select('questions.*, COUNT(answers.id) AS answers_count')
-                             .order('answers_count DESC')
-    elsif params[:sort] == 'updated_at'
-      @questions = @questions.order(updated_at: :desc)
+                             .order('answers_count DESC') 
+    when 'updated_at'
+        # 更新日順
+        @questions = @questions.order(updated_at: :desc)
     else
+      # デフォルト: 新着順
       @questions = @questions.order(created_at: :desc)
     end
-  
+    if params[:resolved] == "true"
+      @questions = @questions.where(resolved: true)
+    elsif params[:resolved] == "false"
+      @questions = @questions.where(resolved: false)
+    end
     @questions = @questions.page(params[:page])
   end
 
@@ -40,7 +48,6 @@ class QuestionsController < ApplicationController
   end
 
   def edit
-    # 投稿者本人だけが編集できるようにする
     if @question.user != current_user
         redirect_to @question, alert: "権限がありません"
     end
@@ -69,6 +76,25 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def choose_best_answer
+    @answer = @question.answers.find(params[:answer_id])
+    if @question.user == current_user
+      @question.update(best_answer: @answer)
+      redirect_to @question, notice: "ベストアンサーを選択しました。"
+    else
+      redirect_to @question, alert: "権限がありません"
+    end
+  end
+
+  def remove_best_answer
+    if @question.user == current_user
+      @question.update(best_answer: nil)
+      redirect_to @question, notice: "ベストアンサーを解除しました。"
+    else
+      redirect_to @question, alert: "権限がありません"
+    end
+  end
+  
   private
 
   def set_question
