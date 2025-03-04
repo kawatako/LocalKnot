@@ -22,6 +22,14 @@
   </div>
 <% end %>
 
+<%# 並び替えリンク %>
+<div class="mb-4">
+  並び替え:
+  <%= link_to "新着順", questions_path(sort: 'created_at', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'created_at' || params[:sort].blank? ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "更新日順", questions_path(sort: 'updated_at', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'updated_at' ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "回答数順", questions_path(sort: 'answers_count', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'answers_count' ? 'btn-active' : 'btn-ghost'}" %>
+</div>
+
 <%# 検索結果 %>
 <% if @questions.present? %>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

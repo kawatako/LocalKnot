@@ -4,7 +4,20 @@ class QuestionsController < ApplicationController
 
   def index
     @q = Question.ransack(params[:q])
-    @questions = @q.result(distinct: true).includes(:user, :spot, :category).order(created_at: :desc).page(params[:page]) # Kaminari の page メソッドを追加
+    @questions = @q.result(distinct: true).includes(:user, :spot, :category)
+  
+    if params[:sort] == 'answers_count'
+      @questions = @questions.left_joins(:answers)
+                             .group('questions.id')
+                             .select('questions.*, COUNT(answers.id) AS answers_count')
+                             .order('answers_count DESC')
+    elsif params[:sort] == 'updated_at'
+      @questions = @questions.order(updated_at: :desc)
+    else
+      @questions = @questions.order(created_at: :desc)
+    end
+  
+    @questions = @questions.page(params[:page])
   end
 
   def show
