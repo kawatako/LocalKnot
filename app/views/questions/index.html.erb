@@ -21,20 +21,57 @@
     </div>
   </div>
 <% end %>
-
+<%# 絞り込み %>
+<div class="mb-4">
+  <%= link_to "すべての質問", questions_path(sort: params[:sort], q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:resolved].nil? ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "回答募集中", questions_path(sort: params[:sort], resolved: "false", q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:resolved] == 'false' ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "解決済み", questions_path(sort: params[:sort], resolved: "true", q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:resolved] == 'true' ? 'btn-active' : 'btn-ghost'}" %>
+</div>
 <%# 並び替えリンク %>
 <div class="mb-4">
   並び替え:
-  <%= link_to "新着順", questions_path(sort: 'created_at', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'created_at' || params[:sort].blank? ? 'btn-active' : 'btn-ghost'}" %>
-  <%= link_to "更新日順", questions_path(sort: 'updated_at', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'updated_at' ? 'btn-active' : 'btn-ghost'}" %>
-  <%= link_to "回答数順", questions_path(sort: 'answers_count', q: params[:q]&.to_unsafe_h), class: "btn btn-sm #{params[:sort] == 'answers_count' ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "新着順", questions_path(sort: 'created_at',q: params[:q]&.to_unsafe_h, resolved: params[:resolved]), class: "btn btn-sm #{params[:sort] == 'created_at' || params[:sort].blank? ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "更新日順", questions_path(sort: 'updated_at',q: params[:q]&.to_unsafe_h, resolved: params[:resolved]), class: "btn btn-sm #{params[:sort] == 'updated_at' ? 'btn-active' : 'btn-ghost'}" %>
+  <%= link_to "回答数順", questions_path(sort: 'answers_count',q: params[:q]&.to_unsafe_h, resolved: params[:resolved]), class: "btn btn-sm #{params[:sort] == 'answers_count' ? 'btn-active' : 'btn-ghost'}" %>
 </div>
 
 <%# 検索結果 %>
 <% if @questions.present? %>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <% @questions.each do |question| %>
-      <%= render "questions/question_card", question: question %>
+       <div class="card bg-base-100 shadow-md">
+          <div class="card-body">
+            <div class="flex items-center mb-2">
+              <% if question.user.profile.present? %>
+                <% if question.user.profile.avatar.present? %>
+                  <%= image_tag question.user.profile.avatar.thumb.url, class: "w-8 h-8 rounded-full mr-2" %>
+                <% else %>
+                   <%= image_tag "default_avatar.png", alt: "名無しさん", class: "w-8 h-8 rounded-full mr-2" %>
+                <% end %>
+              <% else %>
+                <%= image_tag "default_avatar.png", alt: "名無しさん", class: "w-8 h-8 rounded-full mr-2" %>
+              <% end %>
+              <div>
+                <p class="font-bold"><%= link_to question.user.profile&.user_name || '名無しさん', profile_path(question.user) %></p>
+                <p class="text-xs text-gray-500"><%= l question.created_at, format: :short %></p>
+                 <% if question.category.present? %>
+                  <p class="text-xs">カテゴリ: <%= question.category.name %></p>
+                <% end %>
+            </div>
+          </div>
+             <h2 class="card-title text-lg"><%= link_to question.title, question_path(question) %></h2>
+           <p class="mb-2"><%= truncate(question.body, length: 50) %></p>
+            <div class="text-right">
+              <% if question.resolved? %>
+                 <span class="badge badge-success">解決済み</span>
+               <% else %>
+                 <span class="badge badge-warning">回答募集中</span>
+               <% end %>
+            </div>
+            <div class="card-actions justify-end">
+            </div>
+         </div>
+        </div>
     <% end %>
   </div>
 <% else %>
