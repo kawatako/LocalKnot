@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+trix-editor {
+  @apply min-h-[15rem]; /* Tailwind CSS のユーティリティクラスを使用 */
+  /* または */
+  /* min-height: 240px; */ /* 直接指定する場合 (1行あたり 1.5rem = 24px と仮定) */
+}

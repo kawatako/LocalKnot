@@ -40,8 +40,13 @@ ja:
             password:
               too_short: "は%{count}文字以上に設定して下さい"
               blank: "を入力してください"
+        image:
+          attributes:
+            file:
+              invalid_content_type: "は許可されていないファイルタイプです。"
+              file_size_too_big: "は5MBより大きくすることはできません。"
 
-  errors: # この errors は ja: の直下 (グローバル)
+  errors:
     messages:
       too_large: "は%{count}MBより小さくしてください"
       content_type_invalid: "は%{allowed_types}のいずれかの形式である必要があります"

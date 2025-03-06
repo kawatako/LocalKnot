@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "likes/create"
-  get "likes/destroy"
   root "home#index"
   devise_for :users
   resources :profiles, only: [ :show, :edit, :update ]
@@ -13,6 +11,9 @@ Rails.application.routes.draw do
       patch :remove_best_answer
     end
   end
+
+  resources :blogs
+  resources :images, only: [:new, :create, :destroy, :index]
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end

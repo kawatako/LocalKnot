@@ -437,6 +437,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails
   fog-aws
+  image_processing (~> 1.14)
   jbuilder
   jsbundling-rails
   kaminari
