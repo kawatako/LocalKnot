@@ -58,7 +58,7 @@ gem "fog-aws"
 # 画像の作成、編集、変換などを行う
 gem "mini_magick"
 
-gem "stringio", "~> 3.1.2"
+gem "stringio", "~> 3.1.5"
 
 # アセットプリコンパイルに必要
 gem "sprockets-rails"
