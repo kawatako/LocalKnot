@@ -1,0 +1,41 @@
+<%= form_with(model: blog) do |form| %>
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div data-controller="images">
+    <h2>アップロード済みの画像</h2>
+    <div class="image-grid">
+      <% current_user.images.each do |image| %>
+        <div class="image-item">
+          <%= image_tag image.file.variant(resize_to_limit: [100, 100]), data: { action: "click->images#insert", image_url: url_for(image.file) } %>
+          <p><%= image.title %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <h2>サムネイル画像</h2>
+    <%= form.label :thumbnail_image_id, "サムネイル画像" %>
+    <%= form.collection_select :thumbnail_image_id, current_user.images, :id, :title, include_blank: "なし" %>
+    <br>
+
+    <%= form.label :content, "本文" %>
+    <%= form.rich_text_area :content, data: { images_target: "trixEditor" } , class: "textarea textarea-bordered h-64"%>
+  </div>
+
+  <%= form.label :spot_name, 'スポット', class: "label" %>
+  <%= form.text_field :spot_name, class: "input input-bordered" %>
+
+  <%= form.label :category_id, 'カテゴリ', class: "label" %>
+  <%= form.select :category_id, Category.all.map { |c| [c.name, c.id] }, { include_blank: 'カテゴリを選択' }, { class: 'select select-bordered' } %>
+
+  <div>
+  <%= form.label :status %>
+  <%= form.select :status, Blog.statuses.keys, prompt: "状態を選択してください" %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

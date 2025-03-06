@@ -1,0 +1,16 @@
+<h1>ブログ一覧</h1>
+
+<%= link_to '新規作成', new_blog_path %>
+
+<ul>
+<% @blogs.each do |blog| %>
+<li>
+<%= link_to blog.title, blog %>
+投稿者: <%= blog.user.profile.user_name %>
+<% if blog.images.attached? %>
+    <%= image_tag blog.images.first.variant(resize_to_limit: [100, 100]) %>
+<% end %>
+</li>
+<% end %>
+</ul>
+<%= paginate @blogs %>

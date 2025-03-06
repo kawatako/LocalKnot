@@ -1,0 +1,18 @@
+<h1><%= @blog.title %></h1>
+<p>投稿者: <%= @blog.user.profile.user_name %></p>
+
+<% if @blog.images.attached? %>
+  <div class="image-gallery"> <%# 必要に応じてクラスを追加 %>
+  <% @blog.images.each do |image| %>
+      <%= image_tag image.variant(resize_to_limit: [500, 500]) %> <%# サイズは適宜調整 %>
+  <% end %>
+  </div>
+<% end %>
+<div class="blog-content">
+  <%= @blog.body %>
+</div>
+
+<% if @blog.user == current_user %>
+  <%= link_to '編集', edit_blog_path(@blog) %>
+  <%= link_to '削除', blog_path(@blog), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？' } %>
+<% end %>
