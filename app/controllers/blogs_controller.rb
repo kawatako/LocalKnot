@@ -13,9 +13,11 @@ class BlogsController < ApplicationController
 
   def new
     @blog = Blog.new
+    @images = current_user.images
   end
 
   def edit
+    @images = current_user.images
   end
 
   def create
@@ -48,7 +50,7 @@ class BlogsController < ApplicationController
 
   def blog_params
     # strong parameters
-    params.require(:blog).permit(:title, :content, :thumbnail_image_id, :user_id, :category_id, :spot_id, :status)
+    params.require(:blog).permit(:title, :content, :thumbnail_image_id, :user_id, :category_id, :spot_name, :status)
   end
   # 追加: ログインユーザーとブログの投稿者が一致するか確認
   def correct_user

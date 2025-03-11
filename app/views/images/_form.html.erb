@@ -1,0 +1,14 @@
+<%# app/views/images/_form.html.erb %>
+<%= form_with(model: Image.new, url: images_path) do |form| %> <%# local: true を削除 %>
+  <div class="form-control">
+    <%= form.label :title, "タイトル (任意)", class: "label" %>
+    <%= form.text_field :title, class: "input input-bordered" %>
+  </div>
+  <div class="form-control">
+    <%= form.label :file, "画像ファイル", class: "label" %>
+    <%= form.file_field :file, class: "file-input" %>
+  </div>
+  <div class="mt-2">
+    <%= form.submit "アップロード", class: "btn btn-primary" %>
+  </div>
+<% end %>

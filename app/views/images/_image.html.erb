@@ -1,0 +1,9 @@
+<%# app/views/images/_image.html.erb %>
+<div class="image-item" id="<%= dom_id(image) %>">
+  <%= image_tag image.file.variant(resize_to_limit: [100, 100]), data: { action: "click->images#insert", image_url: url_for(image.file) } %>
+  <p><%= image.title %></p>
+  <%= button_to "削除", image_path(image),
+                method: :delete,
+                form: { data: { turbo_stream: true, turbo_confirm: '本当に削除しますか？' } },
+                class: "btn btn-error btn-xs" %>
+</div>
