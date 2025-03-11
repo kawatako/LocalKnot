@@ -3,7 +3,7 @@ class Blog < ApplicationRecord
   belongs_to :category, optional: true
   belongs_to :spot, optional: true
   has_one :thumbnail_image, class_name: 'Image', dependent: :destroy
-  has_rich_text :body       # Action Text (リッチテキスト)
+  has_rich_text :content       # Action Text (リッチテキスト)
   enum status: { draft: 0, published: 1 } # statusをenumで定義
 
   validates :title, presence: true
@@ -15,11 +15,11 @@ class Blog < ApplicationRecord
 
   # Ransack 用
   def self.ransackable_attributes(auth_object = nil)
-    ["body", "category_id", "created_at", "id", "spot_id", "title", "updated_at", "user_id"]
+    ["content", "category_id", "created_at", "id", "spot_id", "title", "updated_at", "user_id"]
   end
 
   def self.ransackable_associations(auth_object = nil)
-      ["category", "spot", "user", "rich_text_body", "images_attachments"] # rich_text_body, images_attachments を追加
+    ["category", "spot", "user", "rich_text_body", "images_attachments"] # rich_text_body, images_attachments を追加
   end
 
   attr_accessor :spot_name

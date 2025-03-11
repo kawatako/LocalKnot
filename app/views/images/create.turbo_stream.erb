@@ -1,0 +1,4 @@
+<%# app/views/images/create.turbo_stream.erb %>
+<%= turbo_stream.append "image-list" do %>
+  <%= render "images/image", image: @image %>
+<% end %>
