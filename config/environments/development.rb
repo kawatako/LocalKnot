@@ -75,4 +75,5 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   config.public_file_server.enabled = true
+
 end

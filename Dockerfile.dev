@@ -1,41 +1,33 @@
-# 使用するベースイメージを指定。Ruby 3.2.3 がインストールされたイメージを使用します。
 FROM ruby:3.2.3
 
-# 環境変数 LANG を設定。文字エンコーディングを C.UTF-8 に設定します。
+# 環境変数の設定
 ENV LANG C.UTF-8
-
-# 環境変数 TZ を設定。タイムゾーンを Asia/Tokyo に設定します。
 ENV TZ Asia/Tokyo
 
-# apt-get を使ってパッケージリストを更新し、必要なパッケージをインストールします。
-# -qq: 出力を最小限に抑えます。
-# -y: すべてのプロンプトに自動的に yes と答えます。
+# 必要なパッケージのインストール
 RUN apt-get update -qq \
-&& apt-get install -y ca-certificates curl gnupg \
-# /etc/apt/keyrings ディレクトリを作成します。
-&& mkdir -p /etc/apt/keyrings \
-# NodeSource の GPG キーをダウンロードし、/etc/apt/keyrings/nodesource.gpg に保存します。
-&& curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-# Node.js のメジャーバージョンを設定します。
-&& NODE_MAJOR=20 \
-# NodeSource のリポジトリを apt のソースリストに追加します。
-&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
-# Yarn の GPG キーをダウンロードし、apt-key に追加します。
-&& wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-# Yarn のリポジトリを apt のソースリストに追加します。
-&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+  && apt-get install -y ca-certificates curl gnupg \
+  && mkdir -p /etc/apt/keyrings \
+  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+  && NODE_MAJOR=20 \
+  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+  && wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# 再度 apt-get を使ってパッケージリストを更新し、必要なパッケージをインストールします。
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs yarn vim
+# Node.js, Yarn, その他の必要なパッケージをインストール
+RUN apt-get update -qq && apt-get install -y \
+  build-essential \
+  libpq-dev \
+  nodejs \
+  yarn \
+  vim
 
-# コンテナ内に /myapp ディレクトリを作成します。
+# アプリケーションディレクトリの作成
 RUN mkdir /myapp
-
-# ワーキングディレクトリを /myapp に設定します。
 WORKDIR /myapp
 
-# bundler をインストールします。
-RUN gem install bundler
+# node_modules/.bin を PATH に追加
+ENV PATH="/myapp/node_modules/.bin:${PATH}"
 
-# ホストマシンのカレントディレクトリの内容を、コンテナの /myapp ディレクトリにコピーします。
+# アプリケーションのコードをコピー
 COPY . /myapp
