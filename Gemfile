@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.3"
 
 # Rails フレームワーク本体
-gem "rails", "~> 7.2.1"
+gem "rails", "~> 8.0.2"
 
 # PostgreSQL 用データベースアダプタ
 gem "pg", "~> 1.1"
