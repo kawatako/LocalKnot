@@ -33,7 +33,7 @@ class Question < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     [ "spot", "category", "user", "answers" ]
   end
-  #best_answer_idがある場合はresolvedをtrueにする処理
+  # best_answer_idがある場合はresolvedをtrueにする処理
   def set_resolved
     self.resolved = best_answer_id.present?
   end

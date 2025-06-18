@@ -32,7 +32,7 @@ end
     @image = current_user.images.find(params[:id])
       @image.destroy
       respond_to do |format|
-        format.html { redirect_to images_path, notice: '画像を削除しました' }
+        format.html { redirect_to images_path, notice: "画像を削除しました" }
         format.turbo_stream # destroy.turbo_stream.erb をレンダリング
       end
   end

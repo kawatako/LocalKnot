@@ -1,19 +1,19 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [ :index, :show ] 
+  before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_question, only: [ :show, :edit, :update, :destroy, :choose_best_answer, :remove_best_answer ]
 
   def index
     @q = Question.ransack(params[:q])
     @questions = @q.result(distinct: true).includes(:user, :spot, :category)
-  
+
     case params[:sort]
-    when 'answers_count'
+    when "answers_count"
       # 回答数順 (回答数が多い順)
       @questions = @questions.left_joins(:answers)
-                             .group('questions.id')
-                             .select('questions.*, COUNT(answers.id) AS answers_count')
-                             .order('answers_count DESC') 
-    when 'updated_at'
+                             .group("questions.id")
+                             .select("questions.*, COUNT(answers.id) AS answers_count")
+                             .order("answers_count DESC")
+    when "updated_at"
         # 更新日順
         @questions = @questions.order(updated_at: :desc)
     else
@@ -94,7 +94,7 @@ class QuestionsController < ApplicationController
       redirect_to @question, alert: "権限がありません"
     end
   end
-  
+
   private
 
   def set_question

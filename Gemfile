@@ -103,7 +103,7 @@ group :development do
   # spring使用時、listen gemを使ってファイルの変更を検知する
   # gem "spring-watcher-listen", "~> 2.0.0"
   # Rails アプリケーションのセキュリティ脆弱性を静的に解析するツ
-  gem "brakeman"
+  gem "brakeman", "7.0.2"
 
   # 開発環境でメールをプレビュー
   gem "letter_opener", "~> 1.9.0"

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   resources :blogs
-  resources :images, only: [:new, :create, :destroy, :index]
+  resources :images, only: [ :new, :create, :destroy, :index ]
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
