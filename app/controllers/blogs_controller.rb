@@ -1,7 +1,7 @@
 class BlogsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_blog, only: [:show, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update, :destroy]
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :set_blog, only: [ :show, :edit, :update, :destroy ]
+  before_action :correct_user, only: [ :edit, :update, :destroy ]
 
   def index
     @q = Blog.ransack(params[:q])
@@ -23,7 +23,7 @@ class BlogsController < ApplicationController
   def create
     @blog = current_user.blogs.new(blog_params)
     if @blog.save
-      redirect_to @blog, notice: 'Blog was successfully created.'
+      redirect_to @blog, notice: "Blog was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class BlogsController < ApplicationController
 
   def update
     if @blog.update(blog_params)
-      redirect_to @blog, notice: 'Blog was successfully updated.'
+      redirect_to @blog, notice: "Blog was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -39,7 +39,7 @@ class BlogsController < ApplicationController
 
   def destroy
     @blog.destroy
-    redirect_to blogs_url, notice: 'Blog was successfully destroyed.', status: :see_other
+    redirect_to blogs_url, notice: "Blog was successfully destroyed.", status: :see_other
   end
 
   private
@@ -57,5 +57,4 @@ class BlogsController < ApplicationController
     @blog = current_user.blogs.find_by(id: params[:id])
     redirect_to root_url, alert: "権限がありません" if @blog.nil?
   end
-
 end
